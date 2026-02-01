@@ -1,0 +1,103 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "LoopBack Integration Bridge",
+        "summary": "Connects watsonx Orchestrate to LoopBack Admin Dashboard",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://scabbardless-humiliatingly-toi.ngrok-free.dev",
+            "description": "Final Backend Tunnel for watsonx Orchestrate"
+        }
+    ],
+    "paths": {
+        "/tickets": {
+            "post": {
+                "summary": "Create a new unresolved ticket",
+                "description": "Records a low-confidence user query for human review.",
+                "operationId": "create_ticket",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Ticket"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/search_knowledge": {
+            "get": {
+                "summary": "Search the IT database for resolutions",
+                "description": "Scans the structured IT support database by keyword.",
+                "operationId": "search_knowledge",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The search keyword or issue description"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of relevant resolutions found in the database",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Ticket": {
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "title": "Query"
+                    },
+                    "ai_draft": {
+                        "type": "string",
+                        "title": "Ai Draft"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "query",
+                    "ai_draft"
+                ],
+                "title": "Ticket"
+            }
+        }
+    }
+}

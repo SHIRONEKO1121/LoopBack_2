@@ -1,0 +1,30 @@
+# Software Troubleshooting & Security Deep Dive
+
+## 1. Security Incidents (Immediate Response)
+### Suspicious Activity on Laptop
+1.  **Disconnect Network**: Turn off Wi-Fi immediately.
+2.  **Report**: Call the Security Hotline at +1-888-IT-SECURE.
+3.  **Audit**: Do NOT shut down the machine (this wipes the RAM where forensic evidence might reside). Close the lid and wait for an IT Security officer.
+
+### Local Admin Rights
+- **Tool**: We use **Privilege Manager** (by Thycotic) or **Admin by Request**.
+- **Use Case**: Installing drivers, specialized dev tools.
+- **Duration**: Approved for 30-minute windows. Requests must include the 'Vendor' and 'Business Reason'.
+
+## 2. Common Application Faults
+
+### Slack: "Cleared Cache & Restart"
+- If images are not loading or messages are stuck:
+  - **Mac/Win**: Help > Troubleshooting > Clear Cache and Restart.
+
+### Google Chrome: "Managed by your organization"
+- This is normal. It means Extension policies and security filters are applied. 
+- **Troubleshooting**: If a site is blocked, check the 'Company Zscaler' app in your taskbar. Re-authenticate if it shows 'Logging In' for more than 5 minutes.
+
+## 3. macOS Specific: "Zsh: command not found"
+- This usually occurs after a macOS update because the `.zshrc` or `.zprofile` path was reset.
+- **Standard Fix**: Run `source /etc/profile` and then re-append the IT path: `echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.zshrc`.
+
+## 4. Windows 11: "Blue Screen of Death" (BSOD)
+- **Top Cause**: Outdated Intel Graphics Drivers or CrowdStrike agent conflict.
+- **Action**: Boot into Safe Mode. Run `C:\IT_Scripts\Update_Drivers.ps1`.

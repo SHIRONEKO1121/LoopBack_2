@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Watsonx Widget Test</title>
+</head>
+
+<body>
+    <h1>Official Widget Test Page</h1>
+    <div id="watson-chat"></div>
+
+    <script>
+        window.wxOConfiguration = {
+            orchestrationID: "dd1c385d428d4cec9b210ae7944f1f94_e92c7a79-2dc4-4966-b458-48e6728c556e",
+            hostURL: "https://us-south.watson-orchestrate.cloud.ibm.com",
+            rootElementID: "watson-chat",
+            deploymentPlatform: "ibmcloud",
+            crn: "crn:v1:bluemix:public:watsonx-orchestrate:us-south:a/dd1c385d428d4cec9b210ae7944f1f94:e92c7a79-2dc4-4966-b458-48e6728c556e::",
+            chatOptions: {
+                agentId: "12eb6f39-192d-4411-8b3a-20754080c621",
+                agentEnvironmentId: "136c641d-610e-47b4-8e6f-e2719a01365c"
+            }
+        };
+
+        const script = document.createElement('script');
+        script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+        script.onload = () => wxoLoader.init();
+        document.head.appendChild(script);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+
+Question: My computer is lag
+Resolution: User reports that their computer is lagging. No specific troubleshooting steps found in knowledge base. Recommend escalation to IT admin.
+--------------------
+
+Question: I cannot connect to the printer
+Resolution: It looks like your request is missing the actual question. Please provide the specific issue or question you need help with, and I’ll be glad to assist you.
+--------------------
+
+Question: I cannot connect to the printer
+Resolution: I'm unable to determine the specific issue from the provided input. Please provide more details about your problem so I can assist you effectively.
+--------------------
+
+Question: I cannot connect to my browser
+Resolution: I’m unable to determine the specific issue from the provided input. Could you please provide more details about the problem you are experiencing?
+--------------------
+
+Question: How to setup VPN
+Resolution: I’m unable to determine the specific issue from the placeholder text provided. Could you please provide more details about the problem you’re experiencing?
+--------------------
+
+Question: How to setup an VPN
+Resolution: I'm sorry, I don't have enough information in the knowledge base to provide a specific solution for your request.
+--------------------
+
+Question: How do I reset my SSO password?
+Resolution: I’m sorry, I don’t have enough information in the knowledge base to provide a specific solution for your request. Could you please provide more details about the issue you’re experiencing?
+--------------------
+
+Question: How do I reset my SSO password?
+Resolution: I'm sorry, I don't have enough information to answer that question.
+--------------------
+
+Question: How do I reset my SSO password?
+Resolution: I'm sorry, I don't have enough information in the knowledge base to provide a specific solution for your request. Could you please provide more details or clarify your issue so I can assist you further?
+--------------------
+
+Question: How do I reset my SSO password?
+Resolution: I’m unable to provide a specific solution without more details about the issue. Please provide additional information about the problem you’re experiencing so I can assist you effectively.
+--------------------
+
+Question: How do I reset my SSO password?
+Resolution: I'm sorry, I don't have enough information to address that request.
+--------------------
+
+Question: How do I reset my SSO password?
+Resolution: I’m unable to determine the exact issue from the provided query. Could you please provide more details about the problem you’re experiencing so I can assist you effectively?
+--------------------
+
+Question: SSO
+Resolution: I’m unable to determine the exact issue from the provided information. Could you please provide more details about the problem you’re experiencing so I can assist you further?
+--------------------
+
+Question: I cannot connect to the printer
+Resolution: I’m sorry, I don’t have enough information to provide a specific resolution for that request.
+--------------------
+
+Question: I cannot connect to the printer
+Resolution: User reports inability to connect to the printer. No relevant knowledge base entries found. Suggested next steps: Verify printer power and network connection, ensure correct printer driver is installed, check Wi-Fi/Ethernet connectivity, restart the print spooler service, and confirm user has printer permissions. Escalate to IT admin for detailed troubleshooting.
+--------------------
+
+Question: What is the staff Wi-Fi password?
+Resolution: User requested staff Wi-Fi password. Draft response: Provide guidance on how to retrieve the Wi-Fi password securely, e.g., refer to internal portal or admin.
+--------------------
+
+Question: How to request a new coffee machine?
+Resolution: I’m unable to determine the specific issue or request from the placeholder text provided. Please provide a clear description of your question or problem so I can offer an appropriate resolution.
+--------------------
+
+Question: How to request a new coffee machine?
+Resolution: No coffee machine hh
+--------------------
+
+Question: I need a coffee nachine
+Resolution: There is an coffee machine in the resting zone.
+--------------------
+
+Question: where is the coffee machine
+Resolution: It is at 3rd floor beside the meeting room
+
+--------------------
+
+Question: I want a fridge
+Resolution: Of course no, we dont provide fridge to our employees
+--------------------
+
+Question: The screen of my pc is broken
+Resolution: You can contact the IT department at 2391-1231
+--------------------

@@ -1,0 +1,20 @@
+# Corporate VPN Setup Guide (AnyConnect)
+
+## Overview
+This document provides instructions for connecting to the corporate network remotely using the Cisco AnyConnect Secure Mobility Client.
+
+## Prerequisites
+- Active corporate credentials.
+- Multi-Factor Authentication (MFA) set up on your mobile device.
+
+## Step-by-Step Connection
+1. **Open AnyConnect**: Launch the Cisco AnyConnect app from your Applications (macOS) or Start Menu (Windows).
+2. **Enter Server Address**: In the connection box, type: `vpn.acme-corp.com`.
+3. **Click Connect**: You will be prompted for your username and password.
+4. **MFA Verification**: After entering credentials, you will receive a push notification on your Duo/Okta app. Approve it.
+5. **Success**: The AnyConnect icon in your taskbar will now show a closed padlock.
+
+## Common Issues
+- **Error: "Connection attempt failed"**: Ensure you have a stable internet connection. Try restarting your router.
+- **MFA Not Received**: Check your phone's internet connection. If still failing, use the "Enter Code" option instead of "Push".
+- **Password Reset**: If you've forgotten your password, visit [https://sso.acme-corp.com/reset](https://sso.acme-corp.com/reset) from a non-VPN connection.

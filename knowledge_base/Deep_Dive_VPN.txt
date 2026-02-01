@@ -1,0 +1,29 @@
+# Deep-Dive: Enterprise VPN Troubleshooting (Cisco AnyConnect)
+
+## 1. Connection Error Codes
+| Error Code | Meaning | Resolution |
+|------------|---------|------------|
+| `0x80041002` | DNS Resolution Failure | Check if `vpn.acme-corp.com` resolves. Flush DNS: `ipconfig /flushdns` (Win) or `sudo killall -HUP mDNSResponder` (Mac). |
+| `0x80070057` | Invalid parameter/MTU issue | Lower MTU to 1300: `netsh interface ipv4 set subinterface "VPN" mtu=1300 store=persistent`. |
+| `0x80090308` | Certificate Revoked | Export logs and attach to IT ticket. Requires manual certificate re-issuance via Jamf/Intune. |
+
+## 2. Platform-Specific Fixes
+
+### macOS (Sonoma/Ventura)
+- **System Extensions**: Go to System Settings > Privacy & Security. Ensure "Cisco AnyConnect" is allowed in the "Highly Restricted" list.
+- **Split Tunneling Issues**: If internal sites work but external ones don't, check if the system proxy is interfering: `networksetup -getautoproxyurl "Wi-Fi"`.
+
+### Windows 11
+- **Service Restart**: Open `services.msc`. Find "Cisco AnyConnect Secure Mobility Agent". Restart it.
+- **TAP Adapter Conflicts**: If using with VirtualBox, disable the "VirtualBox Host-Only Network" adapter as it conflicts with the VPN route table.
+
+## 3. Profile XML Configuration
+The standard profile is located at:
+- **Mac**: `/opt/cisco/anyconnect/profile/ACME_Standard.xml`
+- **Win**: `%ProgramData%\Cisco\Cisco AnyConnect Secure Mobility Client\Profile\ACME_Standard.xml`
+If the file is missing, the client will fail to auto-update the server list.
+
+## 4. MTU Sensitivity
+Some home ISPs (e.g., Starlink, T-Mobile Home Internet) use CGNAT which requires a lower MTU. 
+- **Symptoms**: Connection succeeds, but Outlook/Teams won't load messages.
+- **Fix**: Run `AnyConnect_MTU_Fixer.bat` from the IT Tools folder.

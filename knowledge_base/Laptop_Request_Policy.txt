@@ -1,0 +1,16 @@
+# Hardware Procurement & Laptop Request Policy
+
+## Eligibility
+- **New Employees**: A standard-issue laptop (MacBook Air or ThinkPad T-series) is provided on Day 1.
+- **Upgrades**: Employees are eligible for a hardware refresh every 3 years.
+- **Repairs**: If your equipment is damaged, a loaner will be provided during repair.
+
+## Requesting New Hardware
+1. **Approval**: Obtain email approval from your direct manager.
+2. **Submission**: Open the 'IT Catalog' on the intranet and select the desired model.
+3. **Form**: Complete Form IT-09 (Procurement Request) and attach the manager approval.
+4. **Timing**: Requests take 5-7 business days to process once approved.
+
+## Specialized Equipment
+- Requests for GPUs, high-RAM workstations, or dual monitors require Department Head approval.
+- Accessories (mice, keyboards, adapters) under $50 can be requested directly from the IT supplies cabinet on Floor 2.

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoopBack AI | Premium IT Portal</title>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Official IBM Watsonx Orchestrate Chat Widget -->
+  <script>
+    window.wxOConfiguration = {
+      orchestrationID: "dd1c385d428d4cec9b210ae7944f1f94_e92c7a79-2dc4-4966-b458-48e6728c556e",
+      hostURL: "https://us-south.watson-orchestrate.cloud.ibm.com",
+      rootElementID: "wxo-chat-container",
+      deploymentPlatform: "ibmcloud",
+      crn: "crn:v1:bluemix:public:watsonx-orchestrate:us-south:a/dd1c385d428d4cec9b210ae7944f1f94:e92c7a79-2dc4-4966-b458-48e6728c556e::",
+      chatOptions: {
+        agentId: "12eb6f39-192d-4411-8b3a-20754080c621",
+        agentEnvironmentId: "136c641d-610e-47b4-8e6f-e2719a01365c",
+      }
+    };
+    setTimeout(function () {
+      const script = document.createElement('script');
+      script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+      script.addEventListener('load', function () {
+        wxoLoader.init();
+      });
+      document.head.appendChild(script);
+    }, 0);
+  </script>
+
+  <!-- Container for widget (separate from React root) -->
+  <div id="wxo-chat-container"></div>
+
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>

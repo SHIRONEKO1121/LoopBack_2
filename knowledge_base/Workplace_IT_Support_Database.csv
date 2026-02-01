@@ -1,0 +1,19 @@
+Category,Issue,Question,Resolution,Tags
+Account & Access,Password Reset,How do I reset my SSO password?,Navigate to https://sso.acme-corp.com/reset and follow the MFA prompts. Note: Passwords must be 12+ characters with a symbol.,SSO;Password;Account
+Account & Access,Account Locked,My account is locked. What do I do?,Accounts lock after 5 failed attempts. Please wait 15 minutes for an auto-unlock or contact IT via Slack for immediate reset.,Lock;Account;Security
+Account & Access,MFA Issues,I didn't receive my MFA push notification.,Ensure your phone has an internet connection. Try using the 'Enter Code' offline option in your Authenticator app.,MFA;Login;Security
+Network,Wi-Fi Connection,What is the staff Wi-Fi password?,Staff Wi-Fi uses your SSO credentials. Connect to 'ACME-Staff' and enter your corporate username and password.,Wi-Fi;Network;Internet
+Network,Guest Wi-Fi,How do I connect guests to Wi-Fi?,Guests should use 'ACME-Guest'. No password required but they must accept the Terms and Conditions in the pop-up browser.,Guest;Wi-Fi;Internet
+Network,Slow VPN,My VPN connection is very slow.,Switch to a wired connection if possible. If on Wi-Fi try moving closer to the router or disconnect other high-bandwidth devices.,VPN;Network;Performance
+Productivity,Outlook Signature,How do I update my email signature?,"Go to File > Options > Mail > Signatures. Use the official company template found on the Intranet under 'Brand Identity'.",Outlook;Email;Branding
+Productivity,Teams Audio,My microphone is not working in Teams.,"Check 'Device Settings' in Teams and ensure the correct input device is selected. Test your mic in the system sound settings.",Teams;Meeting;Microphone
+Productivity,Zoom Recording,Where are my Zoom cloud recordings stored?,"Recordings are synced to your 'My Documents/Zoom' folder and also available at https://zoom.acme-corp.com/recordings.",Zoom;Meeting;Video
+Hardware,Battery Drain,My laptop battery drains very quickly.,"Reduce screen brightness; close background apps like Chrome or Slack when not in use. If the battery health is below 80% request a replacement.",Hardware;Laptop;Battery
+Hardware,Monitor Resolution,My external monitor looks blurry.,"Ensure you are using a high-quality DisplayPort or HDMI cable. In Windows/Mac settings set the resolution to 'Native' (e.g. 1920x1080).",Hardware;Monitor;Display
+Hardware,Docking Station,My peripherals won't connect through the dock.,Unplug the USB-C/Thunderbolt cable from your laptop and the power from the dock. Wait 10 seconds and reconnect both.,Hardware;Dock;Peripherals
+Software,Admin Rights,I need admin rights to install software.,"Standard software can be installed via the 'Self-Service Portal'. For other apps submit a 'Temporary Admin Rights' request in Slack.",Software;Install;Admin
+Software,Phishing,I think I received a phishing email.,Do not click any links. Forward the email to phishing-report@acme-corp.com and then delete it from your inbox.,Security;Phishing;Email
+Software,Disk Space Full,My disk is almost full.,"Use 'Disk Cleanup' (Windows) or 'Storage Management' (Mac) to remove temp files. Move large project files to the cloud (OneDrive/Box).",Software;Performance;Laptop
+Facility,Meeting Room Tech,How do I share my screen in the meeting room?,Connect the HDMI cable to your laptop or use the wireless 'ShareLink' code displayed on the room's TV screen.,Meeting;Facility;Tech
+Facility,Printer Jam,The printer has a paper jam.,Follow the physical instructions on the printer's LCD screen. Most jams occur in Tray 2 or Door A.,Printer;Hardware;FacilityExpert Contribution,I want a fridge...,I want a fridge,"Of course no, we dont provide fridge to our employees",Contribution;Resolved
+Expert Contribution,The screen of my pc is broken...,The screen of my pc is broken,You can contact the IT department at 2391-1231,Contribution;Resolved
