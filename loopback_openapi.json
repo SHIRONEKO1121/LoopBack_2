@@ -1,63 +1,46 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "LoopBack Integration Bridge",
-        "summary": "Connects watsonx Orchestrate to LoopBack Admin Dashboard",
-        "version": "1.0.0"
+        "title": "LoopBack AI - Database Integration API",
+        "summary": "Connects IBM Watsonx Agent to LoopBack's ticket database and knowledge base",
+        "description": "This API enables the IBM Watsonx Orchestrate Agent to search the IT knowledge base, create support tickets, and manage ticket lifecycle. All endpoints are exposed via ngrok tunnel for secure cloud access.",
+        "version": "2.0.0",
+        "contact": {
+            "name": "LoopBack AI Support",
+            "url": "https://github.com/SHIRONEKO1121/LoopBack"
+        }
     },
     "servers": [
         {
-            "url": "https://scabbardless-humiliatingly-toi.ngrok-free.dev",
-            "description": "Final Backend Tunnel for watsonx Orchestrate"
+            "url": "https://inviolably-awkward-shayla.ngrok-free.dev",
+            "description": "ngrok tunnel to local backend (Active: Feb 1, 2026)"
         }
     ],
     "paths": {
-        "/tickets": {
-            "post": {
-                "summary": "Create a new unresolved ticket",
-                "description": "Records a low-confidence user query for human review.",
-                "operationId": "create_ticket",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Ticket"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/search_knowledge": {
             "get": {
-                "summary": "Search the IT database for resolutions",
-                "description": "Scans the structured IT support database by keyword.",
-                "operationId": "search_knowledge",
+                "summary": "lucas_2: Search IT knowledge base",
+                "description": "Searches the structured IT support database by keyword. Returns relevant solutions from text files and CSV database including VPN setup, printer troubleshooting, laptop policies, and more.",
+                "operationId": "lucas_2_search_knowledge",
+                "tags": [
+                    "Knowledge Base"
+                ],
                 "parameters": [
                     {
                         "name": "query",
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1,
+                            "example": "VPN connection"
                         },
-                        "description": "The search keyword or issue description"
+                        "description": "Search keyword or issue description to find in knowledge base"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "A list of relevant resolutions found in the database",
+                        "description": "List of relevant knowledge base articles and solutions",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -66,8 +49,316 @@
                                         "results": {
                                             "type": "array",
                                             "items": {
-                                                "type": "object"
+                                                "type": "object",
+                                                "properties": {
+                                                    "source": {
+                                                        "type": "string",
+                                                        "description": "Filename of the knowledge source",
+                                                        "example": "VPN_Setup_Guide.txt"
+                                                    },
+                                                    "content": {
+                                                        "oneOf": [
+                                                            {
+                                                                "type": "string",
+                                                                "description": "Text content from knowledge file"
+                                                            },
+                                                            {
+                                                                "type": "object",
+                                                                "description": "Structured data from CSV database"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
                                             }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "results": [
+                                        {
+                                            "source": "VPN_Setup_Guide.txt",
+                                            "content": "# Corporate VPN Setup Guide\\n1. Open AnyConnect\\n2. Enter vpn.company.com..."
+                                        },
+                                        {
+                                            "source": "Workplace_IT_Support_Database.csv",
+                                            "content": {
+                                                "Category": "Network",
+                                                "Issue": "VPN Connection Failed",
+                                                "Resolution": "Check firewall settings and restart AnyConnect client"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tickets": {
+            "get": {
+                "summary": "lucas_2: List all support tickets",
+                "description": "Retrieves all tickets from the database, including pending and resolved tickets.",
+                "operationId": "lucas_2_list_tickets",
+                "tags": [
+                    "Ticket Management"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of all tickets",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ticket"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "lucas_2: Create a new support ticket",
+                "description": "Creates a new ticket when the AI cannot resolve a user's issue. The ticket will be assigned a unique ID and grouped with similar tickets if applicable.",
+                "operationId": "lucas_2_create_ticket",
+                "tags": [
+                    "Ticket Management"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TicketCreate"
+                            },
+                            "example": {
+                                "category": "Hardware",
+                                "subcategory": "Printer Troubleshooting",
+                                "query": "My printer is jammed and won't print",
+                                "ai_draft": "User reports a paper jam in the mechanical feeder. No specific KB article for this model. Recommend physical inspection.",
+                                "admin_draft": "Hi! I'm sorry to hear about the printer jam. I've logged this for our hardware team and they will be at your desk shortly to assist.",
+                                "users": [
+                                    "User_Global"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ticket created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "created"
+                                        },
+                                        "ticket_id": {
+                                            "type": "string",
+                                            "example": "TKT-1047"
+                                        },
+                                        "group_id": {
+                                            "type": "string",
+                                            "description": "ID of the ticket group (same as ticket_id if not grouped)",
+                                            "example": "TKT-1047"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tickets/{ticket_id}": {
+            "delete": {
+                "summary": "lucas_2: Delete a support ticket",
+                "description": "Removes a ticket from the database. Used when ticket is rejected or no longer relevant.",
+                "operationId": "lucas_2_delete_ticket",
+                "tags": [
+                    "Ticket Management"
+                ],
+                "parameters": [
+                    {
+                        "name": "ticket_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^TKT-[0-9]+$",
+                            "example": "TKT-1047"
+                        },
+                        "description": "Unique ticket identifier"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ticket deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "deleted"
+                                        },
+                                        "ticket_id": {
+                                            "type": "string",
+                                            "example": "TKT-1047"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ticket not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Ticket not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/broadcast": {
+            "post": {
+                "summary": "lucas_2: Broadcast solution to ticket group",
+                "description": "Applies a solution to all tickets in a group and marks them as resolved. Used when an admin provides a fix for recurring issues.",
+                "operationId": "lucas_2_broadcast_solution",
+                "tags": [
+                    "Ticket Management"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "ticket_id",
+                                    "final_answer"
+                                ],
+                                "properties": {
+                                    "ticket_id": {
+                                        "type": "string",
+                                        "description": "Any ticket ID in the group",
+                                        "example": "TKT-1045"
+                                    },
+                                    "final_answer": {
+                                        "type": "string",
+                                        "description": "Admin-provided solution to apply to all tickets in group",
+                                        "example": "Restarted the print spooler service. Issue should be resolved."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Solution broadcast successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "broadcasted"
+                                        },
+                                        "updated_count": {
+                                            "type": "integer",
+                                            "description": "Number of tickets updated",
+                                            "example": 3
+                                        },
+                                        "group_id": {
+                                            "type": "string",
+                                            "example": "TKT-1045"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/broadcast_all": {
+            "post": {
+                "summary": "lucas_2: Broadcast solution to multiple tickets at once",
+                "operationId": "lucas_2_broadcast_all",
+                "description": "Resolve multiple pending tickets with the same solution. Can filter by category or resolve all pending tickets globally.",
+                "tags": [
+                    "Ticket Management"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "final_answer"
+                                ],
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "description": "Optional: Broadcast only to tickets in this category. Omit to broadcast to ALL pending tickets.",
+                                        "enum": [
+                                            "Network",
+                                            "Hardware",
+                                            "Software",
+                                            "Account",
+                                            "Facility",
+                                            "Security"
+                                        ],
+                                        "example": "Network"
+                                    },
+                                    "final_answer": {
+                                        "type": "string",
+                                        "description": "The solution that resolves all matching tickets",
+                                        "example": "The office router has been rebooted and Wi-Fi connectivity is now restored."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Batch broadcast successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "tickets_resolved": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "category": {
+                                            "type": "string",
+                                            "example": "Network"
                                         }
                                     }
                                 }
@@ -80,24 +371,148 @@
     },
     "components": {
         "schemas": {
-            "Ticket": {
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "title": "Query"
-                    },
-                    "ai_draft": {
-                        "type": "string",
-                        "title": "Ai Draft"
-                    }
-                },
+            "TicketCreate": {
                 "type": "object",
                 "required": [
                     "query",
                     "ai_draft"
                 ],
-                "title": "Ticket"
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "description": "Broad issue category determined by AI agent",
+                        "enum": [
+                            "Network",
+                            "Hardware",
+                            "Software",
+                            "Account",
+                            "Facility",
+                            "Security"
+                        ],
+                        "example": "Network"
+                    },
+                    "subcategory": {
+                        "type": "string",
+                        "description": "Specific issue detail determined by AI agent (e.g., VPN Error, Slack Permissions)",
+                        "example": "VPN Error"
+                    },
+                    "query": {
+                        "type": "string",
+                        "description": "The user's original question or issue report",
+                        "example": "My Wi-Fi connection keeps dropping"
+                    },
+                    "ai_draft": {
+                        "type": "string",
+                        "description": "Technical summary or findings for the admin",
+                        "example": "User reports intermittent Wi-Fi connectivity. Suggest checking router..."
+                    },
+                    "admin_draft": {
+                        "type": "string",
+                        "description": "A polished, empathetic draft response addressed to the user",
+                        "example": "Hi there! I'm sorry you're having trouble with the Wi-Fi. I've flagged this for our network team..."
+                    },
+                    "users": {
+                        "type": "array",
+                        "description": "List of affected user IDs",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "User_123"
+                        ]
+                    }
+                }
+            },
+            "Ticket": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique ticket identifier",
+                        "example": "TKT-1045"
+                    },
+                    "group_id": {
+                        "type": "string",
+                        "description": "ID linking similar tickets together",
+                        "example": "TKT-1045"
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "Broad category",
+                        "example": "Network"
+                    },
+                    "subcategory": {
+                        "type": "string",
+                        "description": "Specific detail",
+                        "example": "VPN Error"
+                    },
+                    "query": {
+                        "type": "string",
+                        "description": "User's question or issue",
+                        "example": "VPN won't connect"
+                    },
+                    "ai_draft": {
+                        "type": "string",
+                        "description": "AI's technical technical summary"
+                    },
+                    "admin_draft": {
+                        "type": "string",
+                        "description": "A polished draft response for the user"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "Pending",
+                            "Resolved",
+                            "Awaiting Info"
+                        ],
+                        "description": "Current ticket status"
+                    },
+                    "users": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of users affected by this issue"
+                    },
+                    "history": {
+                        "type": "array",
+                        "description": "Conversation history with the user",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "role": {
+                                    "type": "string",
+                                    "example": "admin"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Please provide more details."
+                                },
+                                "time": {
+                                    "type": "string",
+                                    "example": "14:30"
+                                }
+                            }
+                        }
+                    },
+                    "final_answer": {
+                        "type": "string",
+                        "description": "Admin-provided solution (if resolved)",
+                        "nullable": true
+                    }
+                }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Knowledge Base",
+            "description": "Search and retrieve IT support documentation"
+        },
+        {
+            "name": "Ticket Management",
+            "description": "Create, list, update, and delete support tickets"
+        }
+    ]
 }

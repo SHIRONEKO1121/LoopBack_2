@@ -39,10 +39,15 @@ DB_FILE = BASE_DIR / "tickets_db.json"
 class Ticket(BaseModel):
     id: Optional[str] = None
     group_id: Optional[str] = None
+    category: Optional[str] = None # Major category (e.g., Network, Hardware)
+    subcategory: Optional[str] = None # Specific detail (e.g., VPN VPN-101 error)
     query: str
-    ai_draft: str
-    status: str = "Pending"
+    ai_draft: str # Technical summary/findings
+    admin_draft: Optional[str] = None # Polished draft for the end-user
+    status: str = "Pending" # Pending, Resolved, Awaiting Info
     users: List[str] = ["User_Unknown"]
+    final_answer: Optional[str] = None
+    history: List[dict] = [] # List of {role: admin/user, message: str, time: str}
 
 class AskRequest(BaseModel):
     message: str
@@ -51,6 +56,14 @@ class BroadcastRequest(BaseModel):
     ticket_id: str
     # group_id: Optional[str] = None
     final_answer: str
+
+class BroadcastAllRequest(BaseModel):
+    category: Optional[str] = None  # If specified, filter by category
+    ticket_ids: Optional[List[str]] = None # If specified, filter by these IDs specifically
+    final_answer: str
+
+class ClarifyRequest(BaseModel):
+    question: str
 
 # --- Database Mock ---
 def load_db():
@@ -66,6 +79,23 @@ def save_db(data):
     with open(DB_FILE, "w") as f:
         json.dump(data, f, indent=4)
 
+def get_iam_token():
+    """Get IBM Cloud IAM token for Watsonx API calls"""
+    try:
+        response = requests.post(
+            "https://iam.cloud.ibm.com/identity/token",
+            data={
+                "grant_type": "urn:ibm:params:oauth:grant-type:apikey",
+                "apikey": API_KEY
+            },
+            timeout=10
+        )
+        response.raise_for_status()
+        return response.json().get("access_token")
+    except Exception as e:
+        print(f"DEBUG: ❌ IAM token error: {e}")
+        return None
+
 # --- Endpoints ---
 
 @app.get("/tickets")
@@ -75,29 +105,123 @@ async def get_tickets():
 @app.post("/tickets")
 async def create_ticket(ticket: Ticket):
     print(f"DEBUG: 📩 Ticket creation request received!")
+    print(f"DEBUG: 📦 Payload: {ticket.dict()}")
     db = load_db()
     
-    # 1. Get Token for AI (re-using the one from ask_ai if possible, or get new)
+    # 1. Get Token for AI similarity checking
+    token = None
     try:
-        tr = requests.post("https://iam.cloud.ibm.com/identity/token", 
-                          data={"grant_type": "urn:ibm:params:oauth:grant-type:apikey", "apikey": API_KEY})
-        token = tr.json().get("access_token")
-    except:
+        print(f"DEBUG: 🔑 Getting IAM token for AI grouping...")
+        token = get_iam_token()
+        if token:
+            print(f"DEBUG: ✅ Got IAM token successfully")
+        else:
+            print(f"DEBUG: ⚠️ IAM token is None - using fallback grouping")
+    except Exception as e:
+        print(f"DEBUG: ❌ Failed to get IAM token: {e} - using fallback grouping")
         token = None
 
-    # 2. Check for Similarity
+    # 2. Check for Similarity - PRIORITY: Category-based grouping (from Agent)
     group_id = None
-    if token:
-         group_id = check_similarity_ai(ticket.query, db, token)
     
-    ticket.id = f"TKT-{1020 + len(db) + 1}"
+    # Strategy 1: If Agent provided category + subcategory, use high-precision grouping
+    if ticket.category:
+        print(f"DEBUG: 📂 Ticket has category: {ticket.category} | Subcategory: {ticket.subcategory or 'None'}")
+        query_lower = ticket.query.lower().strip()
+        
+        for existing_ticket in db:
+            if existing_ticket.get("status") != "Pending":
+                continue
+            
+            # Same major category
+            if existing_ticket.get("category") == ticket.category:
+                # If subcategories also match, it's a very strong group signal
+                if ticket.subcategory and existing_ticket.get("subcategory") == ticket.subcategory:
+                    group_id = existing_ticket.get("group_id", existing_ticket["id"])
+                    print(f"DEBUG: 🎯 Perfect match! Category & Subcategory match: {ticket.category} > {ticket.subcategory}")
+                    break
+                
+                # Otherwise fall back to text similarity within the same category
+                existing_query = existing_ticket.get("query", "").lower().strip()
+                query_words = set(query_lower.split())
+                existing_words = set(existing_query.split())
+                
+                if query_words and existing_words:
+                    overlap = len(query_words & existing_words)
+                    similarity = overlap / max(len(query_words), len(existing_words))
+                    
+                    if similarity >= 0.4: # Lower threshold because category already matches
+                        group_id = existing_ticket.get("group_id", existing_ticket["id"])
+                        print(f"DEBUG: 🔗 Category match! Grouped with {existing_ticket['id']} (similarity: {similarity:.0%})")
+                        break
+    
+    # Strategy 2: AI-powered grouping (if token available and no category match)
+    if not group_id and token:
+        print(f"DEBUG: 🤖 Trying AI-powered grouping...")
+        group_id = check_similarity_ai(ticket.query, db, token)
+    
+    # Strategy 3: FALLBACK - Simple text-based grouping
+    if not group_id:
+        print(f"DEBUG: 🔄 Using fallback similarity check...")
+        query_lower = ticket.query.lower().strip()
+        
+        for existing_ticket in db:
+            if existing_ticket.get("status") != "Pending":
+                continue
+            
+            existing_query = existing_ticket.get("query", "").lower().strip()
+            
+            # Exact match
+            if existing_query == query_lower:
+                group_id = existing_ticket.get("group_id", existing_ticket["id"])
+                print(f"DEBUG: 🎯 Found exact match with {existing_ticket['id']}")
+                break
+            
+            # 45%+ word similarity (Lowered from 0.7 to catch more follow-ups)
+            query_words = set(query_lower.split())
+            existing_words = set(existing_query.split())
+            if query_words and existing_words:
+                overlap = len(query_words & existing_words)
+                similarity = overlap / max(len(query_words), len(existing_words))
+                if similarity >= 0.45:
+                    group_id = existing_ticket.get("group_id", existing_ticket["id"])
+                    print(f"DEBUG: 🔗 Found similar ticket {existing_ticket['id']} ({similarity:.0%} match)")
+                    break
+    
+    # 3. Robust ID Generation (Timestamp + Offset)
+    ticket_count = len(db)
+    timestamp_suffix = int(time.time()) % 10000
+    ticket.id = f"TKT-{1100 + ticket_count}-{timestamp_suffix}"
     
     if group_id:
         print(f"DEBUG: 🔗 Linking new ticket {ticket.id} to Group {group_id}")
         ticket.group_id = group_id
+        
+        # Update existing tickets in the same group
+        for t in db:
+            if t.get("group_id") == group_id or t["id"] == group_id:
+                # If group was waiting for info, set back to Pending
+                if t.get("status") == "Awaiting Info":
+                    t["status"] = "Pending"
+                    print(f"DEBUG: 🔄 Pushing Group {group_id} back to Pending (User replied)")
+                
+                # Add to history
+                if "history" not in t: t["history"] = []
+                t["history"].append({
+                    "role": "user",
+                    "message": ticket.query,
+                    "time": time.strftime("%H:%M")
+                })
     else:
         print(f"DEBUG: 🆕 New Group established for {ticket.id}")
         ticket.group_id = ticket.id
+        # Initialize history for new group
+        if not ticket.history:
+            ticket.history = [{
+                "role": "user",
+                "message": ticket.query,
+                "time": time.strftime("%H:%M")
+            }]
 
     db.append(ticket.dict())
     save_db(db)
@@ -119,18 +243,47 @@ async def delete_ticket(ticket_id: str):
         print(f"DEBUG: ⚠️ Ticket {ticket_id} not found")
         raise HTTPException(status_code=404, detail="Ticket not found")
 
+@app.post("/tickets/{ticket_id}/ask")
+async def ask_clarifying_question(ticket_id: str, req: ClarifyRequest):
+    print(f"DEBUG: ❓ Admin asking question for ticket: {ticket_id}")
+    db = load_db()
+    
+    ticket_found = False
+    for ticket in db:
+        if ticket["id"] == ticket_id:
+            ticket["status"] = "Awaiting Info"
+            if "history" not in ticket:
+                ticket["history"] = []
+            
+            ticket["history"].append({
+                "role": "admin",
+                "message": req.question,
+                "time": time.strftime("%H:%M")
+            })
+            ticket_found = True
+            break
+            
+    if ticket_found:
+        save_db(db)
+        print(f"DEBUG: ✅ Question sent for {ticket_id}")
+        return {"status": "success", "message": "Question sent to user"}
+    else:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+
 @app.post("/broadcast")
 async def broadcast_solution(req: BroadcastRequest):
     db = load_db()
     
     # Check if we can find the group_ID first
-    target_group = None
-    target_ticket_query = None
+    target_category = None
+    target_subcategory = None
 
     for ticket in db:
         if ticket["id"] == req.ticket_id:
-            target_group = ticket.get("group_id", ticket["id"]) # Fallback to own ID if None
+            target_group = ticket.get("group_id", ticket["id"])
             target_ticket_query = ticket.get("query", "")
+            target_category = ticket.get("category", "Support")
+            target_subcategory = ticket.get("subcategory", "General")
             break
             
     if target_group:
@@ -146,25 +299,27 @@ async def broadcast_solution(req: BroadcastRequest):
         
         # --- NEW: Save to Knowledge Base CSV ---
         if target_ticket_query and req.final_answer:
-            try:
-                csv_file = KB_DIR / "Workplace_IT_Support_Database.csv"
-                # Check if file exists to determine if we need a header (though it should exist)
-                file_exists = csv_file.exists()
-                
-                with open(csv_file, 'a', newline='', encoding='utf-8') as f:
-                    writer = csv.writer(f)
-                    # Format: Category, Issue, Question, Resolution, Tags
-                    # We'll use "Expert Contribution" for Category and reuse Question for Issue since we don't have a summary
-                    writer.writerow([
-                        "Expert Contribution", 
-                        target_ticket_query, 
-                        target_ticket_query, 
-                        req.final_answer, 
-                        "Contribution;Resolved"
-                    ])
-                print(f"DEBUG: 📚 Added solution to Knowledge Base: {csv_file}")
-            except Exception as e:
-                print(f"DEBUG: ❌ Failed to update Knowledge Base: {e}")
+                if not is_quality_solution(req.final_answer):
+                    print(f"DEBUG: ⏭️ Skipping KB update (not a quality solution)")
+                else:
+                    try:
+                        csv_file = KB_DIR / "Workplace_IT_Support_Database.csv"
+                        with open(csv_file, 'a', newline='', encoding='utf-8') as f:
+                            writer = csv.writer(f)
+                            category_display = target_category
+                            if target_subcategory and target_subcategory != "General":
+                                category_display = f"{target_category} - {target_subcategory}"
+                                
+                            writer.writerow([
+                                category_display, 
+                                target_ticket_query, 
+                                target_ticket_query, 
+                                req.final_answer, 
+                                f"{target_category};{target_subcategory or ''};Resolved"
+                            ])
+                        print(f"DEBUG: 📚 Added solution to Knowledge Base: {csv_file}")
+                    except Exception as e:
+                        print(f"DEBUG: ❌ Failed to update Knowledge Base: {e}")
 
     else:
         print("DEBUG: ⚠️ Ticket ID not found for broadcast.")
@@ -172,36 +327,262 @@ async def broadcast_solution(req: BroadcastRequest):
     save_db(db)
     return {"status": "broadcast_complete"}
 
+@app.post("/broadcast_all")
+async def broadcast_all(req: BroadcastAllRequest):
+    """
+    Broadcast solution to multiple tickets at once.
+    Can filter by category or resolve all pending tickets.
+    """
+    print(f"DEBUG: 📢 Batch broadcast request - Category: {req.category or 'ALL'}")
+    db = load_db()
+    updated_count = 0
+    resolved_ids = []
+    
+    for ticket in db:
+        # Only update pending tickets
+        if ticket.get("status") != "Pending":
+            continue
+        
+        # Filter by IDs if provided (highest priority)
+        if req.ticket_ids is not None:
+            if ticket.get("id") not in req.ticket_ids:
+                continue
+        # Otherwise filter by category if specified
+        elif req.category and ticket.get("category") != req.category:
+            continue
+        
+        # Update ticket
+        ticket["status"] = "Resolved"
+        ticket["final_answer"] = req.final_answer
+        updated_count += 1
+        resolved_ids.append(ticket["id"])
+        print(f"DEBUG: ✅ Resolved {ticket['id']}")
+    
+    save_db(db)
+    
+    # Add to knowledge base
+    kb_category = req.category
+    if not kb_category and updated_count > 0:
+        # Try to find a common category from the resolved tickets
+        cats = [t.get("category") for t in db if t["id"] in resolved_ids and t.get("category")]
+        if cats:
+            kb_category = cats[0] # Use the first one as representative
+
+    if kb_category and updated_count > 0:
+        if not is_quality_solution(req.final_answer):
+            print(f"DEBUG: ⏭️ Skipping batch KB update (not a quality solution)")
+        else:
+            try:
+                csv_file = KB_DIR / "Workplace_IT_Support_Database.csv"
+                with open(csv_file, 'a', newline='', encoding='utf-8') as f:
+                    writer = csv.writer(f)
+                    writer.writerow([
+                        kb_category,
+                        f"Batch Resolved: {kb_category} Issues",
+                        f"Resolution for {updated_count} user report(s)",
+                        req.final_answer,
+                        f"{kb_category};BatchResolved"
+                    ])
+                print(f"DEBUG: 📚 Added batch solution to Knowledge Base")
+            except Exception as e:
+                print(f"DEBUG: ⚠️ Failed to update KB: {e}")
+    
+    print(f"DEBUG: 🎉 Batch broadcast complete - {updated_count} tickets resolved")
+    return {
+        "status": "success",
+        "tickets_resolved": updated_count,
+        "category": req.category or "All",
+        "resolved_ticket_ids": resolved_ids
+    }
+
+
 @app.get("/search_knowledge")
 async def search_knowledge(query: str):
-    print(f"DEBUG: 🔍 Knowledge search triggered: '{query}'")
+    """
+    Search knowledge base - prioritizes CSV Q&A matches heavily.
+    CSV questions get 10x higher scores than general text matches.
+    """
+    print(f"DEBUG: 🔍 Knowledge search: '{query}'")
     results = []
-    query_words = [w.lower() for w in query.replace('?', '').split() if len(w) >= 3]
+    query_lower = query.lower().strip()
     
-    # Search Files
-    for file_path in KB_DIR.glob("*"):
-        if file_path.suffix.lower() == ".csv":
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    reader = csv.DictReader(f)
-                    for row in reader:
-                        text = " ".join([str(v) for v in row.values() if v]).lower()
-                        if query.lower() in text or any(word in text for word in query_words):
-                            results.append({"source": file_path.name, "content": row})
-            except: pass
-        elif file_path.suffix.lower() == ".txt":
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    if query.lower() in content.lower() or any(word in content.lower() for word in query_words):
-                        results.append({"source": file_path.name, "content": content[:500]})
-            except: pass
-            
-    print(f"DEBUG: ✅ Found {len(results)} search results")
-    return {"results": results[:5]}
+    # Synonym expansion for better matching
+    synonyms = {
+        'broken': ['cracked', 'damaged', 'not working', 'broken'],
+        'connect': ['setup', 'install', 'add', 'configure', 'connect'],
+        'fix': ['repair', 'solve', 'troubleshoot', 'fix'],
+        'slow': ['lag', 'lagging', 'sluggish', 'slow'],
+        'issue': ['problem', 'error', 'issue', 'trouble'],
+        'get': ['request', 'obtain', 'get', 'need'],
+        'pc': ['computer', 'laptop', 'pc', 'machine'],
+        'screen': ['display', 'monitor', 'screen'],
+        'share': ['present', 'show', 'share', 'display'],
+        'wifi': ['wi-fi', 'wireless', 'network', 'wifi'],
+        'guest': ['visitor', 'guest', 'external'],
+    }
+    
+    # Expand query with synonyms
+    expanded_query = query_lower
+    for word, alternatives in synonyms.items():
+        for alt in alternatives:
+            if alt in query_lower:
+                expanded_query += " " + " ".join(alternatives)
+                break
+    
+    # Remove stopwords and punctuation for word matching
+    stopwords = {'the', 'how', 'what', 'where', 'when', 'why', 'can', 'could', 'should', 'would', 'will', 'are', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'from', 'by', 'a', 'an', 'is', 'do', 'does', 'my', 'i', 'it'}
+    query_words = [w.lower() for w in expanded_query.replace('?', '').replace(',', '').replace('.', '').split() 
+                   if len(w) >= 3 and w.lower() not in stopwords]
+    
+    # Remove duplicates
+    query_words = list(set(query_words))
+    
+    print(f"DEBUG: Query words (expanded): {query_words[:10]}")
+    
+    # === PRIORITY 1: Search CSV (structured Q&A) ===
+    csv_file = KB_DIR / "Workplace_IT_Support_Database.csv"
+    if csv_file.exists():
+        try:
+            with open(csv_file, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if not row.get('Question'):  # Skip rows without questions
+                        continue
+                        
+                    question = str(row['Question']).lower()
+                    resolution = str(row.get('Resolution', '')).lower()
+                    category = str(row.get('Category', '')).lower()
+                    tags = str(row.get('Tags', '')).lower()
+                    
+                    score = 0
+                    
+                    # HIGHEST: Exact query match in Question
+                    if query_lower in question:
+                        score += 1000
+                        print(f"DEBUG: 🎯 Exact phrase in Q: {row['Question'][:60]}...")
+                    
+                    # VERY HIGH: Question contains query (reversed)  
+                    if question in query_lower and len(question) > 10:
+                        score += 900
+                        print(f"DEBUG: 🎯 Question phrase in query: {row['Question'][:60]}...")
+                    
+                    # HIGH: Most query words match question or tags
+                    if query_words:
+                        question_matches = sum(1 for word in query_words if word in question or word in tags)
+                        match_ratio = question_matches / len(query_words)
+                        
+                        if match_ratio >= 0.7:  # 70%+ match
+                            score += 700
+                        elif match_ratio >= 0.5:  # 50%+ match
+                            score += 500
+                        elif match_ratio >= 0.3:  # 30%+ match
+                            score += 300
+                        else:
+                            score += question_matches * 40
+                    
+                    # MEDIUM: Partial matches in resolution, category, or tags
+                    if query_lower in resolution:
+                        score += 100
+                    if query_lower in category:
+                        score += 150  # Boost category matches
+                    if query_lower in tags:
+                        score += 120  # Boost tag matches
+                    
+                    if score > 0:
+                        results.append({
+                            "source": csv_file.name,
+                            "content": row,
+                            "score": score
+                        })
+        except Exception as e:
+            print(f"DEBUG: Error reading CSV: {e}")
+    
+    # === PRIORITY 2: Search TXT files (only if needed for context) ===
+    # Only use TXT files as supplementary material with lower scores
+    for file_path in KB_DIR.glob("*.txt"):
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                content_lower = content.lower()
+                
+                score = 0
+                
+                # Exact phrase match in TXT
+                if query_lower in content_lower:
+                    score += 200  # Much lower than CSV
+                    
+                    # Bonus for title match
+                    if query_lower in content_lower[:100]:
+                        score += 30
+                
+                # Word matching in TXT (even lower priority)
+                if query_words:
+                    word_matches = sum(1 for word in query_words if word in content_lower)
+                    match_ratio = word_matches / len(query_words)
+                    
+                    if match_ratio >= 0.7:
+                        score += 100
+                    elif match_ratio >= 0.5:
+                        score += 60
+                    else:
+                        score += word_matches * 5
+                
+                if score > 0:
+                    results.append({
+                        "source": file_path.name,
+                        "content": content[:500],  # First 500 chars
+                        "score": score
+                    })
+        except Exception as e:
+            print(f"DEBUG: Error reading {file_path.name}: {e}")
+    
+    # Sort by score (highest first)
+    results.sort(key=lambda x: x['score'], reverse=True)
+    
+    print(f"DEBUG: ✅ Found {len(results)} results")
+    if results:
+        print(f"DEBUG: Top 3: {[(r['source'], r['score']) for r in results[:3]]}")
+    
+    # Return top 5, remove score field
+    return {"results": [{"source": r["source"], "content": r["content"]} for r in results[:5]]}
 
-    print(f"DEBUG: ✅ Found {len(results)} search results")
-    return {"results": results[:5]}
+def is_quality_solution(text: str) -> bool:
+    """
+    Checks if the text is a real solution or just an escalation bridge.
+    Returns True if it's a high-quality resolution worth saving.
+    """
+    if not text or len(text) < 15:
+        return False
+        
+    lower_text = text.lower()
+    
+    # Phrases that indicate it's just a "bridge" or escalation, NOT a solution
+    bridge_phrases = [
+        "connecting you", "transferring you", "it admin to assist", 
+        "support team will", "logged a ticket", "escalated to",
+        "will address this issue", "further help", "investigate further",
+        "contact you shortly", "sent this request", "flagged this for our"
+    ]
+    
+    # If it contains bridge phrases AND is very short, it's definitely not a solution
+    if any(p in lower_text for p in bridge_phrases):
+        # Allow it only if it's actually long (might contain a solution + escalation)
+        if len(text) < 60:
+            return False
+            
+    # Phrases that indicate real technical steps or answers
+    solution_indicators = [
+        "check", "try", "navigate to", "click", "install", 
+        "reset", "restart", "verify", "password is", "location is",
+        "steps:", "guide", "procedure", "how to"
+    ]
+    
+    # If it contains real instructions, it's likely a solution
+    if any(p in lower_text for p in solution_indicators):
+        return True
+        
+    # Default: if it doesn't look like a tiny bridge, keep it
+    return len(text) > 40
 
 def check_similarity_ai(new_query: str, existing_tickets: List[dict], token: str) -> Optional[str]:
     """
@@ -252,7 +633,7 @@ Match ID:"""
             "repetition_penalty": 1.0
         },
         "model_id": "ibm/granite-13b-chat-v2",
-        "project_id": "e92c7a79-2dc4-4966-b458-48e6728c556e" # Using similar ID structure as instance for now, usually project_id is different
+        "project_id": os.getenv("INSTANCE_ID", "your-project-id-here") 
     }
 
     try:

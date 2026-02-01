@@ -5,15 +5,37 @@ Account & Access,MFA Issues,I didn't receive my MFA push notification.,Ensure yo
 Network,Wi-Fi Connection,What is the staff Wi-Fi password?,Staff Wi-Fi uses your SSO credentials. Connect to 'ACME-Staff' and enter your corporate username and password.,Wi-Fi;Network;Internet
 Network,Guest Wi-Fi,How do I connect guests to Wi-Fi?,Guests should use 'ACME-Guest'. No password required but they must accept the Terms and Conditions in the pop-up browser.,Guest;Wi-Fi;Internet
 Network,Slow VPN,My VPN connection is very slow.,Switch to a wired connection if possible. If on Wi-Fi try moving closer to the router or disconnect other high-bandwidth devices.,VPN;Network;Performance
-Productivity,Outlook Signature,How do I update my email signature?,"Go to File > Options > Mail > Signatures. Use the official company template found on the Intranet under 'Brand Identity'.",Outlook;Email;Branding
-Productivity,Teams Audio,My microphone is not working in Teams.,"Check 'Device Settings' in Teams and ensure the correct input device is selected. Test your mic in the system sound settings.",Teams;Meeting;Microphone
-Productivity,Zoom Recording,Where are my Zoom cloud recordings stored?,"Recordings are synced to your 'My Documents/Zoom' folder and also available at https://zoom.acme-corp.com/recordings.",Zoom;Meeting;Video
-Hardware,Battery Drain,My laptop battery drains very quickly.,"Reduce screen brightness; close background apps like Chrome or Slack when not in use. If the battery health is below 80% request a replacement.",Hardware;Laptop;Battery
-Hardware,Monitor Resolution,My external monitor looks blurry.,"Ensure you are using a high-quality DisplayPort or HDMI cable. In Windows/Mac settings set the resolution to 'Native' (e.g. 1920x1080).",Hardware;Monitor;Display
+Productivity,Outlook Signature,How do I update my email signature?,Go to File > Options > Mail > Signatures. Use the official company template found on the Intranet under 'Brand Identity'.,Outlook;Email;Branding
+Productivity,Teams Audio,My microphone is not working in Teams.,Check 'Device Settings' in Teams and ensure the correct input device is selected. Test your mic in the system sound settings.,Teams;Meeting;Microphone
+Productivity,Zoom Recording,Where are my Zoom cloud recordings stored?,Recordings are synced to your 'My Documents/Zoom' folder and also available at https://zoom.acme-corp.com/recordings.,Zoom;Meeting;Video
+Hardware,Battery Drain,My laptop battery drains very quickly.,Reduce screen brightness; close background apps like Chrome or Slack when not in use. If the battery health is below 80% request a replacement.,Hardware;Laptop;Battery
+Hardware,Monitor Resolution,My external monitor looks blurry.,Ensure you are using a high-quality DisplayPort or HDMI cable. In Windows/Mac settings set the resolution to 'Native' (e.g. 1920x1080).,Hardware;Monitor;Display
 Hardware,Docking Station,My peripherals won't connect through the dock.,Unplug the USB-C/Thunderbolt cable from your laptop and the power from the dock. Wait 10 seconds and reconnect both.,Hardware;Dock;Peripherals
-Software,Admin Rights,I need admin rights to install software.,"Standard software can be installed via the 'Self-Service Portal'. For other apps submit a 'Temporary Admin Rights' request in Slack.",Software;Install;Admin
+Software,Admin Rights,I need admin rights to install software.,Standard software can be installed via the 'Self-Service Portal'. For other apps submit a 'Temporary Admin Rights' request in Slack.,Software;Install;Admin
 Software,Phishing,I think I received a phishing email.,Do not click any links. Forward the email to phishing-report@acme-corp.com and then delete it from your inbox.,Security;Phishing;Email
-Software,Disk Space Full,My disk is almost full.,"Use 'Disk Cleanup' (Windows) or 'Storage Management' (Mac) to remove temp files. Move large project files to the cloud (OneDrive/Box).",Software;Performance;Laptop
+Software,Disk Space Full,My disk is almost full.,Use 'Disk Cleanup' (Windows) or 'Storage Management' (Mac) to remove temp files. Move large project files to the cloud (OneDrive/Box).,Software;Performance;Laptop
 Facility,Meeting Room Tech,How do I share my screen in the meeting room?,Connect the HDMI cable to your laptop or use the wireless 'ShareLink' code displayed on the room's TV screen.,Meeting;Facility;Tech
-Facility,Printer Jam,The printer has a paper jam.,Follow the physical instructions on the printer's LCD screen. Most jams occur in Tray 2 or Door A.,Printer;Hardware;FacilityExpert Contribution,I want a fridge...,I want a fridge,"Of course no, we dont provide fridge to our employees",Contribution;Resolved
-Expert Contribution,The screen of my pc is broken...,The screen of my pc is broken,You can contact the IT department at 2391-1231,Contribution;Resolved
+Network,VPN Setup,How do I connect to the VPN?,"1. Download Cisco AnyConnect from https://vpn.acme-corp.com/downloads
+2. Install the app
+3. Connect to vpn.acme-corp.com
+4. Enter your SSO credentials and MFA",VPN;Network;AnyConnect;Setup
+Network,VPN Connection,VPN won't connect,"1. Check internet connection
+2. Verify VPN URL is vpn.acme-corp.com
+3. Try disabling firewall temporarily
+4. Clear AnyConnect cache: delete C:\ProgramData\Cisco\Cisco AnyConnect (Windows) or ~/Library/Application Support/Cisco (Mac)",VPN;Network;Troubleshooting
+Network,VPN Error 0x80041002,VPN error code 0x80041002,DNS Resolution Failure. Check if vpn.acme-corp.com resolves. Flush DNS: 'ipconfig /flushdns' (Windows) or 'sudo killall -HUP mDNSResponder' (Mac),VPN;Error;DNS
+Network,VPN Error 0x80070057,VPN error 0x80070057,"Invalid parameter/MTU issue. Lower MTU to 1300: 'netsh interface ipv4 set subinterface ""VPN"" mtu=1300 store=persistent'",VPN;Error;MTU
+Facility,Meeting Room Audio,How do I unmute the microphone in the meeting room?,Press the microphone button on the Logitech Rally speaker (center of table). LED will turn green when unmuted.,Meeting;Facility;Audio;Microphone
+Facility,Zoom Room,How to start a Zoom meeting in the conference room?,Tap 'Start Meeting' on the iPad controller. Or tap 'Join' and enter the meeting ID,Meeting;Zoom;Conference
+Hardware,Laptop Request,How do I request a new laptop?,Submit a request via ServiceNow (https://acme.service-now.com) under Hardware > New Device Request. Include business justification. Approval required from manager and IT.,Hardware;Laptop;Request;Policy
+Hardware,Laptop Upgrade,Can I upgrade my laptop?,Laptops are replaced on a 3-year cycle. Early upgrades require VP approval and valid business case (e.g. performance bottleneck for critical work),Hardware;Laptop;Upgrade;Policy
+Hardware,Cracked Screen,My screen is cracked,1 accidental damage event covered per year. Submit ticket with photos. AppleCare or Dell ProSupport will arrange repair (typically 2-3 business days),Hardware;Screen;Damage;Repair
+Hardware,Standard Laptop Models,What laptop models are available?,"Tier A (Engineering): MacBook Pro 14"" M3 Pro, 36GB RAM. Tier B (Business): MacBook Air 13"" M3 16GB or Dell Latitude 5440",Hardware;Laptop;Models;Specs
+Software,Software Installation,How do I install software?,Use Self-Service portal (https://self-service.acme-corp.com). Pre-approved software can be installed directly. Custom software requires IT security review (submit ticket),Software;Installation;Security;Policy
+Software,Admin Rights,I need admin rights to install software,"Standard users don't have admin rights for security. Use Self-Service portal for approved apps, or submit ticket explaining business need for custom software",Software;Admin;Security;Policy
+Hardware,Printer Offline,My printer is offline,"1. Check power - ensure printer screen is on
+2. Verify network - printer should be on 'ACME-Devices' WiFi
+3. Reset queue - delete stuck print jobs and restart printer",Printer;Troubleshooting;Offline
+Hardware,Printer Paper Jam,Printer paper jam,"Follow on-screen instructions on printer LCD showing jam location (Door A, Tray 2, etc.). Open indicated door and remove jammed paper with both hands. Close firmly.",Printer;Troubleshooting;Jam
+Hardware,Add Printer,How do I add a printer?,macOS: System Settings > Printers & Scanners > Add Printer (appears under Bonjour if on corporate WiFi). Windows: Settings > Printers & scanners > Add device,Printer;Setup;Installation
+Account - Password Reset,I cannot log into my account.,I cannot log into my account.,"Hi, I’m sorry you’re unable to log in. To resolve this, please go to the password reset page (https://sso.acme-corp.com/reset) and complete the multi‑factor authentication steps. Remember to create a password that’s 12+ characters with at least one symbol. Let me know if you run into any issues after resetting.",Account;Password Reset;Resolved
