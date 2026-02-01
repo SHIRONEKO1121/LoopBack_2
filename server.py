@@ -125,9 +125,12 @@ async def broadcast_solution(req: BroadcastRequest):
     
     # Check if we can find the group_ID first
     target_group = None
+    target_ticket_query = None
+
     for ticket in db:
         if ticket["id"] == req.ticket_id:
             target_group = ticket.get("group_id", ticket["id"]) # Fallback to own ID if None
+            target_ticket_query = ticket.get("query", "")
             break
             
     if target_group:
@@ -140,6 +143,29 @@ async def broadcast_solution(req: BroadcastRequest):
                 ticket["final_answer"] = req.final_answer
                 count += 1
         print(f"DEBUG: ✅ Resolved {count} tickets in group.")
+        
+        # --- NEW: Save to Knowledge Base CSV ---
+        if target_ticket_query and req.final_answer:
+            try:
+                csv_file = KB_DIR / "Workplace_IT_Support_Database.csv"
+                # Check if file exists to determine if we need a header (though it should exist)
+                file_exists = csv_file.exists()
+                
+                with open(csv_file, 'a', newline='', encoding='utf-8') as f:
+                    writer = csv.writer(f)
+                    # Format: Category, Issue, Question, Resolution, Tags
+                    # We'll use "Expert Contribution" for Category and reuse Question for Issue since we don't have a summary
+                    writer.writerow([
+                        "Expert Contribution", 
+                        target_ticket_query, 
+                        target_ticket_query, 
+                        req.final_answer, 
+                        "Contribution;Resolved"
+                    ])
+                print(f"DEBUG: 📚 Added solution to Knowledge Base: {csv_file}")
+            except Exception as e:
+                print(f"DEBUG: ❌ Failed to update Knowledge Base: {e}")
+
     else:
         print("DEBUG: ⚠️ Ticket ID not found for broadcast.")
 

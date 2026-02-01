@@ -207,5 +207,49 @@
         "users": [
             "User_Unknown"
         ]
+    },
+    {
+        "id": "TKT-1042",
+        "group_id": "TKT-1042",
+        "query": "How to open the system?",
+        "ai_draft": "User asked: How to open the system? No relevant solution found in database.",
+        "status": "Resolved",
+        "users": [
+            "User_Unknown"
+        ],
+        "final_answer": "Type in the company website"
+    },
+    {
+        "id": "TKT-1043",
+        "group_id": "TKT-1043",
+        "query": "how do I go inside the system",
+        "ai_draft": "User asked: how do I go inside the system. No relevant solution found.",
+        "status": "Resolved",
+        "users": [
+            "User_Unknown"
+        ],
+        "final_answer": "User asked: how do I go inside the system. No relevant solution found."
+    },
+    {
+        "id": "TKT-1044",
+        "group_id": "TKT-1044",
+        "query": "How to open the system?",
+        "ai_draft": "User asks how to open the system. No relevant knowledge found in the IT database.",
+        "status": "Resolved",
+        "users": [
+            "User_Unknown"
+        ],
+        "final_answer": "Open our company's portal (https://example.com), and log in with your employee account."
+    },
+    {
+        "id": "TKT-1045",
+        "group_id": "TKT-1045",
+        "query": "PC screen broken",
+        "ai_draft": "User reports that the screen of their PC is broken.",
+        "status": "Resolved",
+        "users": [
+            "User_Unknown"
+        ],
+        "final_answer": "You can contact the IT department at 2391-1231"
     }
 ]
