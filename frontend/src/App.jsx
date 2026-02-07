@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Send, Trash2, Zap, Search, Bell, HelpCircle } from 'lucide-react';
+import { ShieldCheck, Send, Trash2, Zap, Search, Bell, HelpCircle, User } from 'lucide-react';
 import './App.css';
 import DatabaseViewer from './DatabaseViewer';
+import UserPortal from './UserPortal';
 
 const API_URL = 'http://localhost:8000';
 
@@ -15,6 +16,9 @@ function App() {
   const [showBroadcastAll, setShowBroadcastAll] = useState(false);
   const [broadcastAllText, setBroadcastAllText] = useState('');
   const [showDatabase, setShowDatabase] = useState(false);
+
+  // View Toggle State
+  const [viewMode, setViewMode] = useState('admin'); // 'admin' or 'user'
 
   // Custom UI State
   const [notification, setNotification] = useState(null);
@@ -96,10 +100,12 @@ function App() {
   ];
 
   useEffect(() => {
-    fetchTickets();
-    const interval = setInterval(fetchTickets, 5000);
-    return () => clearInterval(interval);
-  }, []);
+    if (viewMode === 'admin') {
+      fetchTickets();
+      const interval = setInterval(fetchTickets, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [viewMode]);
 
   const fetchTickets = async () => {
     try {
@@ -219,6 +225,10 @@ function App() {
     }
   };
 
+  if (viewMode === 'user') {
+    return <UserPortal onBack={() => setViewMode('admin')} />;
+  }
+
   return (
     <div className="layout">
       <main className="main-content">
@@ -228,6 +238,13 @@ function App() {
             <input type="text" placeholder="Search knowledge base..." />
           </div>
           <div className="header-actions">
+            <button
+              className="refresh-btn"
+              onClick={() => setViewMode('user')}
+              title="Switch to User Portal"
+            >
+              <User size={18} /> User View
+            </button>
             <Bell size={20} />
             <div className="avatar"></div>
           </div>
@@ -391,7 +408,15 @@ function App() {
                           <span className="escalated-badge">Escalated</span>
                           <span className="ticket-id">{ticket.id}</span>
                         </div>
-                        <p className="ticket-query">"{ticket.query}"</p>
+                        {/* NEW: Ticket Title */}
+                        <h3 className="ticket-subject" style={{ margin: '8px 0', fontSize: '1.2rem' }}>
+                          {ticket.title || "Support Request"}
+                        </h3>
+                        {/* Extracted Dialogue (Query) */}
+                        <div className="ticket-query-box" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
+                          <label style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase' }}>USER DIALOGUE:</label>
+                          <p className="ticket-query" style={{ fontStyle: 'italic', color: '#ddd' }}>"{ticket.query}"</p>
+                        </div>
                       </div>
                       <div className="ticket-body">
                         {ticket.admin_draft && ticket.ai_draft && (

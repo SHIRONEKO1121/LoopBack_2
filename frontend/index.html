@@ -11,31 +11,7 @@
 <body>
   <div id="root"></div>
 
-  <!-- Official IBM Watsonx Orchestrate Chat Widget -->
-  <script>
-    window.wxOConfiguration = {
-      orchestrationID: "your-orchestration-id-here", // REPLACE
-      hostURL: "https://us-south.watson-orchestrate.cloud.ibm.com",
-      rootElementID: "wxo-chat-container",
-      deploymentPlatform: "ibmcloud",
-      crn: "your-crn-here", // REPLACE
-      chatOptions: {
-        agentId: "your-agent-id-here", // REPLACE
-        agentEnvironmentId: "your-env-id-here", // REPLACE
-      }
-    };
-    setTimeout(function () {
-      const script = document.createElement('script');
-      script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
-      script.addEventListener('load', function () {
-        wxoLoader.init();
-      });
-      document.head.appendChild(script);
-    }, 0);
-  </script>
 
-  <!-- Container for widget (separate from React root) -->
-  <div id="wxo-chat-container"></div>
 
   <script type="module" src="/src/main.jsx"></script>
 </body>

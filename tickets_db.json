@@ -1,918 +1,156 @@
 [
     {
         "id": "TKT-1001",
-        "group_id": "TKT-1001",
-        "category": "Account",
-        "subcategory": null,
-        "query": "I need a new vpn account, tell admin",
-        "ai_draft": "User requests a new VPN account. Please provision a new corporate VPN account for the user, ensuring the account is added to the VPN-Access AD group and the user receives setup instructions.",
-        "admin_draft": null,
+        "title": "Administrative Support Request for Computer Repair",
+        "query": "AI: Hi! I'm your IT Assistant. How can I help you today?\nUSER: I need admin to help me fix my computer\nAI: I understand you require administrative assistance to resolve an issue with your computer. Since this requires higher-level permissions, I am escalating this request to our IT administration team. A technician will review your ticket and contact you shortly.",
+        "category": "Hardware",
+        "subcategory": "General System Troubleshooting",
+        "ai_draft": "Hello, I am the IT Administrator assigned to your case. Since you require administrative permissions to resolve the issue with your computer, I will need to perform a remote session to verify the system logs and apply the necessary fixes. Please let me know a convenient time for me to securely access your workstation, or if you prefer, I can visit your desk to investigate the hardware personally.",
         "status": "Resolved",
-        "users": [],
-        "final_answer": "ok",
+        "group_id": "TKT-1001",
         "history": [
             {
                 "role": "user",
-                "message": "I need a new vpn account, tell admin",
-                "time": "21:06"
+                "message": "AI: Hi! I'm your IT Assistant. How can I help you today?\nUSER: I need admin to help me fix my computer\nAI: I understand you require administrative assistance to resolve an issue with your computer. Since this requires higher-level permissions, I am escalating this request to our IT administration team. A technician will review your ticket and contact you shortly.",
+                "time": "00:41"
             }
-        ]
+        ],
+        "final_answer": "ok\n"
     },
     {
         "id": "TKT-1002",
-        "group_id": "TKT-1002",
-        "category": "Account",
-        "subcategory": null,
-        "query": "file another tikcet",
-        "ai_draft": "User requested to file another ticket.",
-        "admin_draft": null,
+        "title": "Support Request",
+        "query": "My printer is not working",
+        "category": "Others",
+        "subcategory": "General",
+        "ai_draft": "Error. Please try again.",
         "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
+        "group_id": "TKT-1002",
         "history": [
             {
+                "role": "ai",
+                "message": "Hi! How can I help?",
+                "time": "00:55"
+            },
+            {
                 "role": "user",
-                "message": "file another tikcet",
-                "time": "21:09"
+                "message": "My printer is not working",
+                "time": "00:55"
             }
-        ]
+        ],
+        "final_answer": "ok\n"
     },
     {
         "id": "TKT-1003",
-        "group_id": "TKT-1003",
-        "category": "Account",
-        "subcategory": null,
-        "query": "I cannot log into my account.",
-        "ai_draft": "User reports inability to log into their account. KB suggests password reset via https://sso.acme-corp.com/reset and completing MFA steps.",
-        "admin_draft": null,
+        "title": "Hardware Malfunction and Admin Support Request",
+        "query": "My computer is broken, can you help me contact admin",
+        "category": "Hardware",
+        "subcategory": "Device Failure",
+        "ai_draft": "I am sorry to hear that your computer is not working. I can certainly assist you in escalating this to our administrative team. To help them prepare, could you please clarify if the device is failing to power on or if there is visible physical damage? I will document these details and notify the hardware administrators immediately to reach out to you for a physical inspection or a device replacement.",
         "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
+        "group_id": "TKT-1003",
         "history": [
             {
+                "role": "ai",
+                "message": "Hi! I'm your IT Assistant. How can I help you today?",
+                "time": "01:14"
+            },
+            {
                 "role": "user",
-                "message": "I cannot log into my account.",
-                "time": "21:09"
+                "message": "Hi",
+                "time": "01:14"
+            },
+            {
+                "role": "ai",
+                "message": "Hello! How can I assist you with your IT needs today? I can help with setting up your VPN, managing Outlook signatures, troubleshooting Teams audio, and more.",
+                "time": "01:14"
+            },
+            {
+                "role": "user",
+                "message": "My computer is broken, can you help me contact admin",
+                "time": "01:14"
+            },
+            {
+                "role": "ai",
+                "message": "I'm sorry to hear that your computer is broken. Since hardware issues and requests for administrative intervention require hands-on support, I will escalate this to our IT administration team for you. Please stay standby while a ticket is created.",
+                "time": "01:14"
             }
-        ]
+        ],
+        "final_answer": "I am sorry to hear that your computer is not working. I can certainly assist you in escalating this to our administrative team. To help them prepare, could you please clarify if the device is failing to power on or if there is visible physical damage? I will document these details and notify the hardware administrators immediately to reach out to you for a physical inspection or a device replacement."
     },
     {
         "id": "TKT-1004",
-        "group_id": "TKT-1004",
+        "title": "SSO Password Reset Request",
+        "query": "How do I reset my SSO password?",
         "category": "Account",
         "subcategory": "Password Reset",
-        "query": "How to change my password in our portal?",
-        "ai_draft": "User needs to change their portal password. KB provides the password reset URL (https://sso.acme-corp.com/reset) and MFA requirements. Password policy: minimum 12 characters, include at least one symbol.",
-        "admin_draft": "Sure thing! To change your password, please go to https://sso.acme-corp.com/reset. Follow the on-screen prompts and complete the multi\u2011factor authentication steps. Remember, your new password must be at least 12 characters long and include a symbol. Let me know if you run into any issues.",
+        "ai_draft": "I understand you need to reset your SSO credentials. To resolve this, please navigate to https://sso.acme-corp.com/reset and follow the provided instructions to securely update your password.",
         "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
+        "group_id": "TKT-1004",
         "history": [
             {
+                "role": "ai",
+                "message": "Hi! I'm your IT Assistant. How can I help you today?",
+                "time": "01:15"
+            },
+            {
                 "role": "user",
-                "message": "How to change my password in our portal?",
-                "time": "21:10"
+                "message": "How do I reset my SSO password?",
+                "time": "01:15"
+            },
+            {
+                "role": "ai",
+                "message": "Hi, I\u2019m sorry you\u2019re unable to log in. To resolve your SSO password issue, please navigate to our organization's self-service password portal or contact your administrator to verify your identity and initiate a secure reset.",
+                "time": "01:15"
             }
-        ]
+        ],
+        "final_answer": "I understand you need to reset your SSO credentials. To resolve this, please navigate to https://sso.acme-corp.com/reset and follow the provided instructions to securely update your password."
     },
     {
         "id": "TKT-1005",
-        "group_id": "TKT-1005",
-        "category": "Account",
-        "subcategory": "Login Issue",
-        "query": "colleague logged into a suspicious website",
-        "ai_draft": "User query does not match the provided knowledge base entry. No relevant solution found.",
-        "admin_draft": "I\u2019m sorry, I couldn\u2019t find a solution for your request. I\u2019ve created a ticket for our support team, and they will get back to you shortly.",
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "colleague logged into a suspicious website",
-                "time": "21:11"
-            },
-            {
-                "role": "user",
-                "message": "colleague logged into a suspicious website",
-                "time": "21:11"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1006",
-        "group_id": "TKT-1005",
-        "category": "Account",
-        "subcategory": "Login Issue",
-        "query": "colleague logged into a suspicious website",
-        "ai_draft": "User query does not match the provided knowledge base entry. No relevant solution found.",
-        "admin_draft": "I\u2019m sorry, I couldn\u2019t find a solution for your request. I\u2019ve created a ticket for our support team, and they will get back to you shortly.",
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": []
-    },
-    {
-        "id": "TKT-1007",
-        "group_id": "TKT-1007",
-        "category": "Account",
-        "subcategory": null,
-        "query": "My colleague has logged into a suspicious website",
-        "ai_draft": "User reported that a colleague logged into a suspicious website. Recommend immediate review of the site, verify that no credentials were entered, and advise to run a security scan. Escalate to IT security team for investigation.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "My colleague has logged into a suspicious website",
-                "time": "21:14"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1008",
-        "group_id": "TKT-1008",
-        "category": "Account",
-        "subcategory": null,
-        "query": "I want to create a new account",
-        "ai_draft": "User requests creation of a new account. Please provision a new corporate account following the onboarding process and inform the user of the username and initial password setup steps.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "I want to create a new account",
-                "time": "21:14"
-            },
-            {
-                "role": "user",
-                "message": "I need a new account, tell admin",
-                "time": "21:20"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1009",
-        "group_id": "TKT-1008",
-        "category": "Account",
-        "subcategory": null,
-        "query": "I need a new account, tell admin",
-        "ai_draft": "User requests a new account. Please review and provision the appropriate access according to company policy.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [],
-        "final_answer": "ok",
-        "history": []
-    },
-    {
-        "id": "TKT-1010",
-        "group_id": "TKT-1010",
-        "category": "Account",
-        "subcategory": "Login",
-        "query": "I cannot log into my account.",
-        "ai_draft": "User is unable to log into their account. Knowledge base provides password reset instructions: direct the user to https://sso.acme-corp.com/reset, complete multi-factor authentication, and set a new password meeting the policy (12+ characters, at least one symbol).",
-        "admin_draft": "I\u2019m sorry you\u2019re having trouble logging in. Please visit the password reset page at https://sso.acme-corp.com/reset and follow the multi\u2011factor authentication steps. When creating a new password, make sure it\u2019s at least 12 characters long and includes at least one symbol. Let me know if you encounter any issues after resetting.",
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "I cannot log into my account.",
-                "time": "21:21"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1011",
-        "group_id": "TKT-1011",
-        "category": "Software",
-        "subcategory": "Audio",
-        "query": "How do I use Teams",
-        "ai_draft": "The user is experiencing audio issues in Microsoft Teams. KB suggests checking the Device Settings within Teams to confirm the correct microphone is selected, and verifying the microphone works in the operating system's sound settings. Steps: 1) Open Teams \u2192 click your profile picture \u2192 Settings \u2192 Devices. Ensure the intended microphone is chosen in the 'Microphone' dropdown. 2) Speak and watch the test bar to confirm input. 3) On Windows, go to Settings \u2192 System \u2192 Sound \u2192 Input, select the same device, and use the 'Test your microphone' button. On macOS, open System Settings \u2192 Sound \u2192 Input and test. 4) If the mic still doesn't work, try restarting Teams, updating the app, or checking for driver updates.",
-        "admin_draft": "Hi there,\n\nI understand you're having trouble with your microphone in Microsoft Teams. Please try the following steps:\n\n1. In Teams, click your profile picture (top\u2011right) and select **Settings** \u2192 **Devices**.\n2. In the **Microphone** dropdown, choose the correct device and speak to see the test bar move.\n3. Next, verify the same microphone works in your computer\u2019s sound settings:\n   - **Windows**: Settings \u2192 System \u2192 Sound \u2192 Input \u2192 select the device and click **Test your microphone**.\n   - **macOS**: System Settings \u2192 Sound \u2192 Input \u2192 select the device and speak to see the input level.\n4. If the issue persists, restart Teams, ensure the app is up\u2011to\u2011date, and check that the audio driver for the device is current.\n\nLet me know if this resolves the problem or if you need further assistance.\n\nBest regards,\nIT Support",
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "How do I use Teams",
-                "time": "21:21"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1012",
-        "group_id": "TKT-1012",
-        "category": "Account",
-        "subcategory": null,
-        "query": "Tell admin i need a new account for microsoft",
-        "ai_draft": "User requests a new Microsoft account. This likely falls under the Account category with a subcategory of New Account provisioning. No admin rights are needed for standard Microsoft services; the request should be routed to the Account Management team to create the account and grant appropriate access. Include any required justification or department approval as per policy.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "Tell admin i need a new account for microsoft",
-                "time": "21:32"
-            },
-            {
-                "role": "user",
-                "message": "Tell admin i need a new account for microsoft",
-                "time": "21:32"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1013",
-        "group_id": "TKT-1012",
-        "category": "Facility",
-        "subcategory": "Equipment Request",
-        "query": "Tell admin i need a new account for microsoft",
-        "ai_draft": "Requests for new equipment such as a coffee machine should be submitted through the Facilities request portal. Include details like desired location, quantity, and any specific model preferences. The facilities team will review the request and respond with availability and installation timeline.",
-        "admin_draft": "Hi there! To request a new coffee machine, please log into the Facilities request portal (or submit a ticket via ServiceNow) and provide the necessary details. Once submitted, the facilities team will handle the approval and installation process. Let me know if you need the link to the portal or any help filling out the request!",
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": []
-    },
-    {
-        "id": "TKT-1014",
-        "group_id": "TKT-1014",
-        "category": "Account",
-        "subcategory": null,
-        "query": "I cannot log into my account.",
-        "ai_draft": "User cannot log into their account despite trying password reset and MFA steps. Requesting admin assistance.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [],
-        "final_answer": "Ok\n",
-        "history": []
-    },
-    {
-        "id": "TKT-1015",
-        "group_id": "TKT-1015",
+        "title": "Network Connectivity Issue - Router Troubleshooting",
+        "query": "I have tried, i guess it is the router's problem",
         "category": "Network",
-        "subcategory": null,
-        "query": "I have wifi connection issues, what should I do?",
-        "ai_draft": "I'm unable to find a specific solution for your request. Please contact the IT support team for further assistance.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "Ok\n",
-        "history": [
-            {
-                "role": "user",
-                "message": "I have wifi connection issues, what should I do?",
-                "time": "21:46"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1016",
-        "group_id": "TKT-1016",
-        "category": "Network",
-        "subcategory": null,
-        "query": "I have wifi connection issues, and i have tried some steps but still cannot solve it. Can you forward to admin?",
-        "ai_draft": "User reports ongoing Wi\u2011Fi connection issues despite trying suggested steps and requests escalation to an admin.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "I have wifi connection issues, and i have tried some steps but still cannot solve it. Can you forward to admin?",
-                "time": "21:49"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1017",
-        "group_id": "TKT-1017",
-        "category": "Facility",
-        "subcategory": null,
-        "query": "My Wi-Fi just cut out completely. It was working fine 20 minutes ago; how do I get back online immediately? Can you find an admin to help?",
-        "ai_draft": "User reports Wi\u2011Fi abruptly cut out after working for 20 minutes and requests immediate admin assistance.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "My Wi-Fi just cut out completely. It was working fine 20 minutes ago; how do I get back online immediately? Can you find an admin to help?",
-                "time": "21:49"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1018",
-        "group_id": "TKT-1018",
-        "category": "Network",
-        "subcategory": null,
-        "query": "Signal dropped on both phone and desktop, no changes, sudden total blackout, how can I fix?",
-        "ai_draft": "User reports sudden loss of Wi\u2011Fi signal on both phone and desktop simultaneously, with no recent changes to settings or router location. Possible causes include ISP outage, router hardware failure, or interference. Suggested initial steps: 1) Verify if other devices are affected. 2) Check router status lights. 3) Restart router (unplug 30 sec). 4) If issue persists, contact ISP or IT for hardware check.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "Signal dropped on both phone and desktop, no changes, sudden total blackout, how can I fix?",
-                "time": "21:50"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1019",
-        "group_id": "TKT-1019",
-        "category": "Facility",
-        "subcategory": null,
-        "query": "how can i upload my video to my personal drive",
-        "ai_draft": "All Zoom meeting recordings are automatically saved to your local 'My Documents/Zoom' folder. You can also access them online at https://zoom.acme-corp.com/recordings. To locate a specific recording, open the folder on your computer or log in to the Zoom portal using your corporate credentials and navigate to the 'Recordings' section.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "ok",
-        "history": [
-            {
-                "role": "user",
-                "message": "how can i upload my video to my personal drive",
-                "time": "21:56"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1020",
-        "group_id": "TKT-1020",
-        "category": "Account",
-        "subcategory": null,
-        "query": "Ask admin for a new account",
-        "ai_draft": "User has requested a new account. Please review the request, verify the user's identity and department, and provision a new corporate account according to the account provisioning policy.",
-        "admin_draft": null,
+        "subcategory": "Router Issue",
+        "ai_draft": "I understand you're suspecting a router issue. Please try power cycling the device by unplugging the power cable for 30 seconds before plugging it back in. If you are in the office, please let me know your desk location; if you are working remotely, please check if other devices can connect to the same network to isolate the problem.",
         "status": "Pending",
-        "users": [],
-        "final_answer": null,
+        "group_id": "TKT-1005",
         "history": [
             {
-                "role": "user",
-                "message": "Ask admin for a new account",
-                "time": "21:56"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1021",
-        "group_id": "TKT-1021",
-        "category": "Network",
-        "subcategory": null,
-        "query": "SSID vanished for everyone, total loss of connectivity, identify hardware vs system fault",
-        "ai_draft": "User reports that the Wi\u2011Fi SSID has disappeared for all users after a period of stable connectivity. Possible causes: 1) Router/AP hardware failure, power loss, or reboot. 2) Switch or upstream network device failure. 3) ISP outage or fiber cut. 4) Configuration change or firmware crash. Suggested diagnostic steps: \u2022 Verify router power and status LEDs. \u2022 Check if the router is reachable via its management IP (ping from a wired PC). \u2022 If reachable, log into the admin console to see the wireless interface status. \u2022 If not reachable, check the upstream switch and the ISP modem status. \u2022 Restart the router and any connected switches. \u2022 If the SSID remains absent after reboot, open a ticket for hardware replacement or ISP escalation. The admin should be assigned to run these checks and restore service.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "SSID vanished for everyone, total loss of connectivity, identify hardware vs system fault",
-                "time": "22:00"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1022",
-        "group_id": "TKT-1022",
-        "category": "Network",
-        "subcategory": null,
-        "query": "Internet vanished 20 minutes ago, determine localized outage or router failure, need fix",
-        "ai_draft": "User reports complete internet loss 20 minutes ago. Need to determine if it is a localized outage (router failure) or broader ISP/network issue. Suggested steps: 1) Verify power and status lights on router/modem. 2) Check if any device can reach the router's LAN IP (ping). 3) If LAN works, try pinging an external IP (8.8.8.8) to test upstream connectivity. 4) If no LAN connectivity, power\u2011cycle router and modem. 5) If still down, check ISP status page or contact ISP. Admin should be assigned to run diagnostics and replace hardware if needed.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "Internet vanished 20 minutes ago, determine localized outage or router failure, need fix",
-                "time": "22:01"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1023",
-        "group_id": "TKT-1023",
-        "category": "Network",
-        "subcategory": null,
-        "query": "Wi-Fi broke 20 minutes ago tried solutions still cannot work need admin",
-        "ai_draft": "User reports Wi-Fi stopped working 20 minutes ago and the suggested troubleshooting steps did not resolve the issue. The issue persists after power cycling and checking router status. Need admin to investigate hardware failure or ISP outage and restore Wi-Fi connectivity.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "Wi-Fi broke 20 minutes ago tried solutions still cannot work need admin",
-                "time": "22:01"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1024",
-        "group_id": "TKT-1024",
-        "category": "Network",
-        "subcategory": null,
-        "query": "No internet, wifi broken 20 minutes ago, need admin",
-        "ai_draft": "User reports no internet and Wi\u2011Fi stopped working 20 minutes ago. Previous troubleshooting attempts have failed. Need admin to diagnose possible router hardware failure, ISP outage, or network configuration issue and restore connectivity.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "No internet, wifi broken 20 minutes ago, need admin",
-                "time": "22:02"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1025",
-        "group_id": "TKT-1025",
-        "category": "Network",
-        "subcategory": null,
-        "query": "Wi-Fi stopped after squirrel on power line, cloudy weather, need admin",
-        "ai_draft": "User reports Wi-Fi stopped working 20 minutes ago after noticing a squirrel on a power line and cloudy weather. Wants to know if weather or animal could affect signal and needs admin assistance. Suggest admin check for external line damage, ISP outage, and router hardware.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "Wi-Fi stopped after squirrel on power line, cloudy weather, need admin",
-                "time": "22:02"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1026",
-        "group_id": "TKT-1026",
-        "category": "Network",
-        "subcategory": null,
-        "query": "Urgent Wi\u2011Fi down 25 minutes ago, need immediate fix for client meeting",
-        "ai_draft": "User reports urgent Wi\u2011Fi outage that started 25 minutes ago and needs immediate resolution for an upcoming client meeting. All prior troubleshooting failed. Request admin to prioritize and restore connectivity urgently.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "Urgent Wi\u2011Fi down 25 minutes ago, need immediate fix for client meeting",
-                "time": "22:03"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1027",
-        "group_id": "TKT-1027",
-        "category": "Network",
-        "subcategory": null,
-        "query": "I can't connect to the office Wi-Fi on my laptop; it keeps saying 'Unable to join network'.",
-        "ai_draft": "User reports they cannot connect to office Wi\u2011Fi, receiving \"Unable to join network\" even after following standard troubleshooting steps (adapter check, forgetting network, restart, re\u2011join, 802.1X verification, driver update, command\u2011line reset). Requested further assistance.\n\nPlease investigate possible authentication issues, AP configuration, or device\u2011specific incompatibility. Gather logs from the user's laptop (netsh wlan show interfaces, event viewer) and verify the user's 802.1X credentials/certificate.\n\nUser is awaiting admin support.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "I can't connect to the office Wi-Fi on my laptop; it keeps saying 'Unable to join network'.",
-                "time": "22:03"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1028",
-        "group_id": "TKT-1028",
-        "category": "Network",
-        "subcategory": null,
-        "query": "The wifi is down!!! It was working like 25 minutes ago!!! I need a meeting with my client!! Please find an admin to fix!!",
-        "ai_draft": "User reports critical Wi\u2011Fi outage that started 25 minutes ago, impacting a client meeting, and requests urgent admin assistance.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "The wifi is down!!! It was working like 25 minutes ago!!! I need a meeting with my client!! Please find an admin to fix!!",
-                "time": "22:04"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1029",
-        "group_id": "TKT-1029",
-        "category": "Network",
-        "subcategory": null,
-        "query": "how can i connect to my wifi when my router keep blinking red on wan",
-        "ai_draft": "I'm sorry, I don't have the information needed to address that request.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry that the Wifi has been down",
-        "history": [
-            {
-                "role": "user",
-                "message": "how can i connect to my wifi when my router keep blinking red on wan",
-                "time": "22:22"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1030",
-        "group_id": "TKT-1030",
-        "category": "Account",
-        "subcategory": null,
-        "query": "I was trying to reset passwrod but the system forbids me from doing so. My user name is lemonsakana147. Can you find an admin to solve the problem?",
-        "ai_draft": "User (username: lemonsakana147) attempted a password reset but was blocked. Request admin assistance.",
-        "admin_draft": null,
-        "status": "Pending",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": null,
-        "history": [
-            {
-                "role": "user",
-                "message": "I was trying to reset passwrod but the system forbids me from doing so. My user name is lemonsakana147. Can you find an admin to solve the problem?",
-                "time": "22:23"
+                "role": "ai",
+                "message": "Hi! I'm your IT Assistant. How can I help you today?",
+                "time": "01:39"
             },
             {
                 "role": "user",
-                "message": "I was trying to order delivery, but the wifi is down! It was working like 20 mins ago! Can you find an admin to solve the problem?",
-                "time": "22:38"
+                "message": "hi",
+                "time": "01:39"
+            },
+            {
+                "role": "ai",
+                "message": "Hello! I am your IT Assistant. How can I help you today? Please let me know if you are experiencing a technical issue or if you have a question about our systems.",
+                "time": "01:39"
             },
             {
                 "role": "user",
-                "message": "I was trying to order delivery, but the wifi is down! It was working like 20 mins ago! Can you find an admin to solve the problem?",
-                "time": "22:39"
+                "message": "The wifi is not working",
+                "time": "01:39"
+            },
+            {
+                "role": "ai",
+                "message": "I'm sorry to hear that your Wi-Fi is not working. Please try toggling your Wi-Fi off and then back on, and ensure that Airplane mode is disabled on your device. Also, check if you can see the network name in your list of available networks. If these steps do not resolve the issue, please let me know so I can help you troubleshoot further.",
+                "time": "01:39"
             },
             {
                 "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:40"
+                "message": "I have tried, i guess it is the router's problem",
+                "time": "01:39"
             },
             {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:40"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:42"
+                "role": "ai",
+                "message": "I understand. Since basic troubleshooting hasn't resolved the issue and you suspect there is a hardware problem with the router, I will escalate this to our network infrastructure team for further investigation. To help them locate the specific device, could you please provide your current location or the building number?",
+                "time": "01:39"
             }
         ]
-    },
-    {
-        "id": "TKT-1031",
-        "group_id": "TKT-1031",
-        "category": "Hardware",
-        "subcategory": null,
-        "query": "I have a hardware problem. Can you find an admin to solve the problem",
-        "ai_draft": "I'm unable to find a relevant solution for your request based on the available hardware resolutions.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "You can call 1243 2323 for help",
-        "history": [
-            {
-                "role": "user",
-                "message": "I have a hardware problem. Can you find an admin to solve the problem",
-                "time": "22:26"
-            },
-            {
-                "role": "user",
-                "message": "I have a problem with my using Teams. Can you find an admin to solve the problem",
-                "time": "22:27"
-            },
-            {
-                "role": "user",
-                "message": "My computer fan is broken. Can you find an admin to solve the problem?",
-                "time": "22:27"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down but it is working like 25 minutes ago! Can you find an admin to solve the problem?",
-                "time": "22:38"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down but it is working like 20 minutes ago! Can you find an admin to solve the problem?",
-                "time": "22:39"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1032",
-        "group_id": "TKT-1032",
-        "category": "Software",
-        "subcategory": null,
-        "query": "Permission denied (publickey) when verifying code with git",
-        "ai_draft": "User is encountering a 'Permission denied (publickey)' error when using Git. Suggested steps: 1) Verify that an SSH key pair exists on the local machine (e.g., ~/.ssh/id_rsa and id_rsa.pub). 2) Ensure the public key is added to the user's Git service account (GitHub/GitLab/Bitbucket). 3) Check that the SSH agent is running and the private key is loaded (ssh-add -l). 4) Confirm the remote URL uses the SSH format (git@...). 5) If needed, generate a new key pair (ssh-keygen) and add it to the account. Advise the user to retry after these steps.\n",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "user"
-        ],
-        "final_answer": "ask our technical staff",
-        "history": [
-            {
-                "role": "user",
-                "message": "Permission denied (publickey) when verifying code with git",
-                "time": "22:27"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1033",
-        "group_id": "TKT-1031",
-        "category": "Software",
-        "subcategory": null,
-        "query": "I have a problem with my using Teams. Can you find an admin to solve the problem",
-        "ai_draft": "User reports an issue with Microsoft Teams usage and requests admin assistance. Suggested initial check: Verify device settings in Teams, ensure correct input device is selected, and test microphone in system sound settings. Await admin review for detailed resolution.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "You can call 1243 2323 for help",
-        "history": [
-            {
-                "role": "user",
-                "message": "My computer fan is broken. Can you find an admin to solve the problem?",
-                "time": "22:27"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down but it is working like 25 minutes ago! Can you find an admin to solve the problem?",
-                "time": "22:38"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down but it is working like 20 minutes ago! Can you find an admin to solve the problem?",
-                "time": "22:39"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1034",
-        "group_id": "TKT-1031",
-        "category": "Software",
-        "subcategory": null,
-        "query": "My computer fan is broken. Can you find an admin to solve the problem?",
-        "ai_draft": "Please contact the IT facilities team to arrange a repair for your computer fan. You can submit a ticket through the internal service portal (e.g., ServiceNow) with the category \"Hardware Issue\" and a brief description of the problem. Include the device name and any error symptoms. The admin team will schedule a technician to replace or fix the fan.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "You can call 1243 2323 for help",
-        "history": [
-            {
-                "role": "user",
-                "message": "The Wifi is down but it is working like 25 minutes ago! Can you find an admin to solve the problem?",
-                "time": "22:38"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down but it is working like 20 minutes ago! Can you find an admin to solve the problem?",
-                "time": "22:39"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1035",
-        "group_id": "TKT-1031",
-        "category": "Network",
-        "subcategory": null,
-        "query": "The Wifi is down but it is working like 25 minutes ago! Can you find an admin to solve the problem?",
-        "ai_draft": "User reports Wi\u2011Fi outage that was working 25 minutes ago and requests admin assistance. Suggested initial check: Verify Wi\u2011Fi SSID, ensure correct credentials, and check for any recent network changes. Await admin review for detailed troubleshooting.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "You can call 1243 2323 for help",
-        "history": [
-            {
-                "role": "user",
-                "message": "The Wifi is down but it is working like 20 minutes ago! Can you find an admin to solve the problem?",
-                "time": "22:39"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1036",
-        "group_id": "TKT-1030",
-        "category": "Network",
-        "subcategory": null,
-        "query": "I was trying to order delivery, but the wifi is down! It was working like 20 mins ago! Can you find an admin to solve the problem?",
-        "ai_draft": "I'm sorry, I couldn't find a specific solution for your request in our knowledge base. If you need further assistance, please contact the appropriate support team or provide more details so we can help you effectively.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry for the wifi break down",
-        "history": [
-            {
-                "role": "user",
-                "message": "I was trying to order delivery, but the wifi is down! It was working like 20 mins ago! Can you find an admin to solve the problem?",
-                "time": "22:39"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:40"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:40"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:42"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1037",
-        "group_id": "TKT-1030",
-        "category": "Network",
-        "subcategory": null,
-        "query": "I was trying to order delivery, but the wifi is down! It was working like 20 mins ago! Can you find an admin to solve the problem?",
-        "ai_draft": "User reports Wi\u2011Fi outage preventing an online delivery order. Wi\u2011Fi was functional 20 minutes ago. Suggested initial steps: verify SSID, ensure correct login credentials, and check for recent network changes. Escalate to IT admin for detailed investigation.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry for the wifi break down",
-        "history": [
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:40"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:40"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:42"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1038",
-        "group_id": "TKT-1031",
-        "category": "Network",
-        "subcategory": null,
-        "query": "The Wifi is down but it is working like 20 minutes ago! Can you find an admin to solve the problem?",
-        "ai_draft": "To access the corporate Wi\u2011Fi, connect to the SSID 'ACME-Staff' and sign in using your corporate username and password via Single Sign\u2011On (SSO). This will authenticate you and grant network access.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "You can call 1243 2323 for help",
-        "history": []
-    },
-    {
-        "id": "TKT-1039",
-        "group_id": "TKT-1030",
-        "category": "Network",
-        "subcategory": null,
-        "query": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-        "ai_draft": "Please refer to the Wi\u2011Fi outage resolution steps: connect to the SSID 'ACME-Staff' and sign in using your corporate SSO credentials. If the issue persists, verify your internet connection, ensure you are on the correct network, and try restarting the Wi\u2011Fi adapter. For further assistance, an IT administrator can be contacted via the existing ticket.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry for the wifi break down",
-        "history": [
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:40"
-            },
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:42"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1040",
-        "group_id": "TKT-1030",
-        "category": "Network",
-        "subcategory": null,
-        "query": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-        "ai_draft": "User reports urgent Wi\u2011Fi outage affecting a client meeting. Wi\u2011Fi was functional earlier. Suggested immediate steps: verify SSID, ensure correct SSO login, check adapter, and restart device. Escalate to IT admin for rapid resolution.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry for the wifi break down",
-        "history": [
-            {
-                "role": "user",
-                "message": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-                "time": "22:42"
-            }
-        ]
-    },
-    {
-        "id": "TKT-1041",
-        "group_id": "TKT-1030",
-        "category": "Network",
-        "subcategory": null,
-        "query": "The Wifi is down!! I need to meet with my client!! Can you find an admin to solve the problem?",
-        "ai_draft": "Please contact the IT support team to address your request. They will guide you through the appropriate process.",
-        "admin_draft": null,
-        "status": "Resolved",
-        "users": [
-            "User_Unknown"
-        ],
-        "final_answer": "we are sorry for the wifi break down",
-        "history": []
     }
 ]

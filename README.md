@@ -1,135 +1,77 @@
-# LoopBack AI - Enterprise IT Support Assistant 🚀
+# Project LoopBack
+`LoopBack` is an AI-powered IT Support Helpdesk system that acts as a first line of defense for support teams. It intelligently handles user inquiries using a Knowledge Base (KB) and escalates complex issues to human agents when necessary. Crucially, it learns from every resolved ticket to improve its future responses.
 
-![IBM Watsonx](https://img.shields.io/badge/IBM-Watsonx_Orchestrate-0062FF?logo=ibm)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
-![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
+## Key Features
 
-> **Winner of "Best Agentic Workflow" Candidate - IBM Hackathon 2026**
->
-> An intelligent, Human-in-the-Loop IT support system powered by **IBM Watsonx Orchestrate**. It combines AI-driven knowledge retrieval, self-healing database logic, and a modern dashboard for seamless IT operations.
+*   **Intelligent Chat Interface**: Users converse naturally with the AI to troubleshoot issues.
+*   **Automatic Escalation**: If the AI cannot resolve an issue (or if hardware/admin intervention is required), it automatically drafts a ticket with a summary of the problem and the full conversation history.
+*   **Knowledge Base Integration**:
+    *   **Retrieval**: Uses fuzzy search logic to find relevant solutions from a CSV database (`knowledge_base/Workplace_IT_Support_Database.csv`).
+    *   **Robust Search**: Matches against "Issue", "Question", and "Tags", ignoring punctuation and case.
+    *   **Duplicate Prevention**: Automatically blocks duplicate or highly similar questions from being added to the KB to keep it clean.
+*   **Self-Learning**: When an admin marks a ticket as "Resolved" with a quality answer, the system automatically adds that solution to the Knowledge Base for future use.
+*   **Admin Dashboard**: View and manage tickets, see AI-drafted solutions, and monitor KB updates.
 
----
+## Technology Stack
 
-## 🌟 Key Features
+*   **Backend**: Python (FastAPI)
+*   **Frontend**: React (Vite + Tailwind CSS + Lucide Icons)
+*   **AI Model**: Google Gemini 1.5 Flash (`gemini-1.5-flash-latest` or `gemini-3-flash-preview` if configured)
+*   **Database**: JSON file (`tickets_db.json`) for tickets, CSV file for Knowledge Base.
 
-### 🧠 Intelligent Agent (Watsonx)
-- **Smart Categorization**: Automatically routes tickets to *Network, Hardware, Software, Account* based on context.
-- **Draft Generation**: Pre-writes empathetic admin responses using GenAI.
-- **Knowledge Retrieval**: Searches internal CSV database to answer queries instantly.
+## Setup Instructions
 
-### 🖥️ Modern Dashboard (React 18)
-- **Live Knowledge Base View**: 🆕 Browse the full 40+ item `Workplace_IT_Support_Database.csv` directly in the UI.
-- **Batch Operations**: 🆕 Select multiple tickets and "Broadcast" a single solution to all of them.
-- **Real-time Filtering**: Filter by Status, Category, and Subcategory instantly.
-- **Dark Mode UI**: Sleek, glassmorphism-inspired design for reduced eye strain.
+### Prerequisites
+*   Python 3.9+
+*   Node.js & npm
+*   Google Gemini API Key
 
-### 🛠️ Robust Backend (FastAPI)
-- **Self-Healing Database**: Automatic integrity checks (`fix_db.py`) ensure no duplicate IDs or missing fields.
-- **Sequential IDs**: Clean Ticket IDs (e.g., `TKT-1001`, `TKT-1002`).
-- **RESTful API**: Fully documented endpoints for Tickets, Knowledge Base, and Agent interactions.
+### Backend Setup
+1.  Navigate to the project root:
+    ```bash
+    cd LoopBack
+    ```
+2.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  Set up your environment variables:
+    *   Create a `.env` file in the root directory.
+    *   dadd your API key: `GOOGLE_API_KEY=your_api_key_here`
 
----
+4.  Start the backend server:
+    ```bash
+    python3 server.py
+    ```
+    The server will run on `http://localhost:8000`.
 
-## 🏗️ Architecture
+### Frontend Setup
+1.  Navigate to the frontend directory:
+    ```bash
+    cd frontend
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+    The application will be available at `http://localhost:5173`.
 
-```mermaid
-graph TD
-    User[User] -->|Chat| Agent[IBM Watsonx Agent]
-    Agent -->|Search| KB[(Knowledge Base CSV)]
-    Agent -->|Create Ticket| API[FastAPI Backend]
-    API -->|Store| DB[(tickets_db.json)]
-    
-    Admin[IT Admin] -->|View/Resolve| UI[React Dashboard]
-    UI -->|Poll| API
-    UI -->|Batch Broadcast| API
-```
+## Usage
 
----
+1.  **User Portal**: Users open the app and type their IT issue. The AI attempts to solve it using the Knowledge Base.
+2.  **Ticket Creation**: If unresolved, a ticket is created.
+3.  **Admin Resolution**: An admin reviews the ticket via the dashboard (or simulates resolution via API) and provides a final answer.
+4.  **Learning**: The system detects the high-quality resolution and adds it to the Knowledge Base for next time.
 
-## 🚀 Quick Start
+## Project Structure
 
-### 1. Backend Setup
-```bash
-# Clone and Enter
-git clone https://github.com/SHIRONEKO1121/LoopBack.git
-cd LoopBack
-
-# Install Dependencies
-pip install -r requirements.txt
-
-# Run Server (Port 8000)
-python server.py
-```
-
-### 2. Frontend Setup
-```bash
-cd frontend
-
-# Install Dependencies
-npm install
-
-# Start Dev Server (Port 5173)
-npm run dev
-```
-
-### 3. Agent Integration (ngrok)
-```bash
-# Expose Backend to IBM Cloud
-ngrok http 8000
-```
-*Copy the ngrok URL and update your `loopback_openapi.json` before importing to IBM Orchestrate.*
-
----
-
-## 📂 Project Structure
-
-- `server.py`: Main FastAPI entry point.
-- `tickets_db.json`: JSON-based storage for active tickets.
-- `knowledge_base/`: Contains the `Workplace_IT_Support_Database.csv`.
-- `frontend/`: React application source code.
-    - `src/DatabaseViewer.jsx`: **New** Component for viewing KB CSV.
-    - `src/App.jsx`: Main dashboard logic.
-- `fix_db.py`: Utility script to repair database structure.
-
----
-
-## 📸 Screenshots
-
-| Dashboard View | Knowledge Base View |
-|:---:|:---:|
-| *Manage tickets with ease* | *Browse static KB articles* |
-| (Add screenshot here) | (Add screenshot here) |
-
----
-
-## 🤖 API Documentation
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/tickets` | GET | List all active tickets |
-| `/tickets` | POST | Create a new ticket |
-| `/knowledge-base` | GET | **New** Fetch full CSV content |
-| `/broadcast_all` | POST | Resolve multiple tickets at once |
-
----
-
-## 💿 Database Management
-
-If you encounter duplicate IDs or missing categories, run the self-healing script:
-
-```bash
-python fix_db.py
-```
-This will:
-1. Re-index all tickets (TKT-1001+)
-2. Assign categories based on keywords
-3. Clean up any corrupted data
-
----
-
-## 👥 Team
-
-**Developer**: [SHIRONEKO1121](https://github.com/SHIRONEKO1121)
-
-*Built for IBM Watsonx 2026*
+*   `server.py`: Main backend logic (App, API endpoints, AI integration).
+*   `tickets_db.json`: Stores all ticket data.
+*   `knowledge_base/`: Contains the CSV database used for RAG (Retrieval-Augmented Generation).
+*   `frontend/`: React source code.
+    *   `src/UserPortal.jsx`: The chat interface for end-users.
+    *   `src/AdminDashboard.jsx`: Interface for support agents.
