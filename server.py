@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 from google import genai
 from langsmith import wrappers
 from difflib import SequenceMatcher
+from google import genai
+from pydantic import BaseModel, Field
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -153,6 +155,17 @@ def is_quality_solution(text: str) -> bool:
     indicators = ["check", "try", "navigate", "click", "install", "reset", "restart", "verify", "password", "steps:", "how to"]
     return any(i in lower for i in indicators) or len(text) > 40
 
+class TicketMetadata(BaseModel):
+    title: str = Field(description="Title of the chat or ticket.")
+    category: str = Field(description="Category of the chat or ticket (e.g., General).")
+    subcategory: str = Field(description="Subcategory of the chat or ticket (e.g., Chat).")
+
+class Response(BaseModel):
+    solution_draft: str = Field(description="Your generated solution draft.")
+    escalation_required: bool = Field(description="True if escalation is required, false otherwise.")
+    confidence: str = Field(description="Confidence level of the AI's response (high, medium, or low).")
+    ticket_metadata: TicketMetadata
+
 # --- Gemini Logic ---
 def analyze_with_gemini(query: str, mode: str = "ticket") -> Dict[str, Any]:
     """Analyzes query using Gemini with optimized context."""
@@ -200,6 +213,10 @@ Return JSON:
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "response_json_schema": Response.model_json_schema(),
+            },
         )
 
         # Extract textual content from various possible response shapes

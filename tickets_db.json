@@ -152,5 +152,143 @@
                 "time": "01:39"
             }
         ]
+    },
+    {
+        "id": "TKT-1006",
+        "title": "Computer Power On",
+        "query": "How to turn on the computer",
+        "category": "Hardware",
+        "subcategory": "Computer Power",
+        "ai_draft": "To turn on the computer, first locate the power button. This button is typically found on the front of the computer tower or the laptop's keyboard area, and it often has a universal power symbol (a circle with a vertical line). Once you've found it, simply press the button. The computer should then begin its startup process.",
+        "status": "Resolved",
+        "group_id": "TKT-1006",
+        "history": [
+            {
+                "role": "ai",
+                "message": "Hi! I'm your IT Assistant. How can I help you today?",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "I'm having trouble connecting. You can try asking again.",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "Error. Please try again.",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "Error. Please try again.",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "```json\n{\n  \"solution_draft\": \"To reset your SSO password, please navigate to https://sso.acme-corp.com/reset and follow the Multi-Factor Authentication (MFA) prompts. Remember, passwords must be at least 12 characters long and include a symbol.\",\n  \"escalation_required\": false,\n  \"confidence\": \"high\",\n  \"ticket_metadata\": {\n    \"title\": \"Chat\",\n    \"category\": \"General\",\n    \"subcategory\": \"Chat\"\n  }\n}\n```",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "```json\n{\n  \"solution_draft\": \"To reset your SSO password, please navigate to https://sso.acme-corp.com/reset and follow the Multi-Factor Authentication (MFA) prompts. Remember, passwords must be at least 12 characters long and include a symbol.\",\n  \"escalation_required\": false,\n  \"confidence\": \"high\",\n  \"ticket_metadata\": {\n    \"title\": \"Chat\",\n    \"category\": \"General\",\n    \"subcategory\": \"Chat\"\n  }\n}\n```",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "```json\n{\n  \"solution_draft\": \"To reset your SSO password, please navigate to https://sso.acme-corp.com/reset and follow the Multi-Factor Authentication (MFA) prompts. Remember, passwords must be at least 12 characters long and include a symbol.\",\n  \"escalation_required\": false,\n  \"confidence\": \"high\",\n  \"ticket_metadata\": {\n    \"title\": \"Chat\",\n    \"category\": \"General\",\n    \"subcategory\": \"Chat\"\n  }\n}\n```",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "```json\n{\n  \"solution_draft\": \"To reset your SSO password, please navigate to https://sso.acme-corp.com/reset and follow the Multi-Factor Authentication (MFA) prompts. Remember, your new password must be at least 12 characters long and include a symbol.\",\n  \"escalation_required\": false,\n  \"confidence\": \"high\",\n  \"ticket_metadata\": {\n    \"title\": \"Chat\",\n    \"category\": \"General\",\n    \"subcategory\": \"Chat\"\n  }\n}\n```",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "Error. Please try again.",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "Error. Please try again.",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "To reset your SSO password, please navigate to https://sso.acme-corp.com/reset and follow the multi-factor authentication (MFA) prompts. Remember that your new password must be at least 12 characters long and include a symbol.",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How do I reset my SSO password?",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "To reset your SSO password, please navigate to https://sso.acme-corp.com/reset and follow the multi-factor authentication (MFA) prompts. Remember that your new password must be at least 12 characters long and include a symbol.",
+                "time": "00:06"
+            },
+            {
+                "role": "user",
+                "message": "How to turn on the computer",
+                "time": "00:06"
+            },
+            {
+                "role": "ai",
+                "message": "To turn on your computer, locate the power button. This is usually on the front or side of your computer tower (for desktops) or on the keyboard area (for laptops). Press and hold it for a few seconds until the computer starts to boot up. If it does not turn on, please ensure the power cable is securely plugged into both the computer and a working power outlet.",
+                "time": "00:06"
+            }
+        ],
+        "final_answer": "To turn on the computer, first locate the power button. This button is typically found on the front of the computer tower or the laptop's keyboard area, and it often has a universal power symbol (a circle with a vertical line). Once you've found it, simply press the button. The computer should then begin its startup process."
     }
 ]
