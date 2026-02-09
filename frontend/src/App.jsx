@@ -32,6 +32,9 @@ function App() {
   const [showAskModal, setShowAskModal] = useState(null); // ticket object
   const [askQuestionText, setAskQuestionText] = useState('');
 
+  // History Modal State
+  const [showHistoryModal, setShowHistoryModal] = useState(null);
+
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 4000);
@@ -416,7 +419,12 @@ function App() {
                         {/* Extracted Dialogue (Query) */}
                         <div className="ticket-query-box" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
                           <label style={{ fontSize: '0.75rem', color: '#888', textTransform: 'uppercase' }}>SUMMARY:</label>
-                          <p className="ticket-query" style={{ fontStyle: 'italic', color: '#ddd' }}>{ticket.query}</p>
+                          <p className="ticket-query" style={{ fontStyle: 'italic', color: '#ddd' }}>
+                            {/* Logic to show actual user query if "ticket" is generic */}
+                            {(ticket.query?.toLowerCase() === 'ticket' && ticket.history?.find(h => h.role === 'user'))
+                              ? ticket.history.find(h => h.role === 'user').message
+                              : ticket.query}
+                          </p>
                         </div>
                       </div>
                       <div className="ticket-body">
@@ -438,17 +446,18 @@ function App() {
                           placeholder="Draft your response here..."
                         />
 
-                        {ticket.history && ticket.history.length > 0 && (
-                          <div className="ticket-history">
-                            {ticket.history.map((h, i) => (
-                              <div key={i} className="history-item">
-                                <span className={`history-role ${h.role}`}>{h.role}</span>
-                                <div className="history-msg">{h.message}</div>
-                                <span className="history-time">{h.time}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                        {/* Chat History Button instead of inline list */}
+                        <div className="history-control">
+                          <button
+                            className="btn-show-history"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowHistoryModal(ticket);
+                            }}
+                          >
+                            📜 Show Chat History ({ticket.history ? ticket.history.length : 0} msgs)
+                          </button>
+                        </div>
 
                         <div className="ticket-actions">
                           <button
@@ -457,10 +466,12 @@ function App() {
                           >
                             <Send size={16} /> Broadcast Reply
                           </button>
+                          {/* "Ask User" moved to/duplicated in history modal, but keeping here for quick access is good UX. 
+                              However, request said "add a button... [in the history part]". 
+                              I will keep it here AND add it to the modal. */}
                           <button
                             onClick={() => {
                               setShowAskModal(ticket);
-                              // Suggest a question based on draft if empty or generic
                               setAskQuestionText("Could you please provide more details about this issue?");
                             }}
                             className="btn-ask"
@@ -676,6 +687,58 @@ function App() {
           </div>
         )}
       </AnimatePresence>
+      <AnimatePresence>
+        {showHistoryModal && (
+          <div className="modal-overlay" onClick={() => setShowHistoryModal(null)}>
+            <motion.div
+              className="modal-content glass history-modal-content"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <h3>📜 Conversation History: {showHistoryModal.id}</h3>
+              <div className="history-modal-users-row">
+                {/* Card for User */}
+                <div className="user-history-card">
+                  <div className="history-card-header">
+                    <span className="user-avatar-placeholder">👤</span>
+                    <strong>{showHistoryModal.users?.[1] || "User"}</strong>
+                  </div>
+
+                  <div className="history-scroll-area">
+                    {showHistoryModal.history?.map((h, i) => (
+                      <div key={i} className={`history-bubble ${h.role}`}>
+                        <div className="bubble-role">{h.role}</div>
+                        <div className="bubble-msg">{h.message}</div>
+                        <div className="bubble-time">{h.time}</div>
+                      </div>
+                    ))}
+                    {(!showHistoryModal.history || showHistoryModal.history.length === 0) && (
+                      <p style={{ opacity: 0.5, textAlign: 'center' }}>No history available.</p>
+                    )}
+                  </div>
+
+                  <div className="history-card-actions">
+                    <button
+                      className="btn-ask"
+                      onClick={() => {
+                        setShowAskModal(showHistoryModal);
+                        setShowHistoryModal(null); // Close history, open Ask
+                        setAskQuestionText("Could you please provide more details?");
+                      }}
+                    >
+                      <HelpCircle size={16} /> Ask this User
+                    </button>
+                    <button onClick={() => setShowHistoryModal(null)} className="btn-cancel">Close</button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {showDatabase && (
           <DatabaseViewer onClose={() => setShowDatabase(false)} />

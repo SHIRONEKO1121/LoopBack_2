@@ -88,15 +88,37 @@ async def on_message(message):
                 
                 if confidence == "high" and not escalate:
                     # Direct Response (Plain Text)
-                    msg = f"**💡 Solution Found**\n\n{solution}\n\n*Is this helpful? If not, reply with 'ticket' to talk to a human.*"
+                    msg = f"**{solution}\n\n*Is this helpful? If not, reply with 'ticket' to talk to a human.*"
                     await thread.send(msg)
                     
                 else:
-                    # Create Ticket
+                    # Create Ticket with Context
+                    # 1. Fetch History
+                    messages = []
+                    # Check if we are in a thread (best context) or channel
+                    target_ctx = message.channel
+                    
+                    async for msg in target_ctx.history(limit=50):
+                         if msg.content:
+                             role = "model" if msg.author == bot.user else "user"
+                             messages.append({"role": role, "content": msg.content})
+                    
+                    # Reverse so it's chronological
+                    messages.reverse()
+                    
+                    # 2. Determine meaningful query
+                    # If user just said "ticket", look back for the last user message that wasn't "ticket"
+                    final_query = user_query
+                    if len(user_query.split()) < 3 and len(messages) > 1:
+                        for m in reversed(messages[:-1]): # Skip current "ticket" msg
+                            if m["role"] == "user":
+                                final_query = m["content"]
+                                break
+
                     ticket_payload = {
-                        "query": user_query,
-                        "history": [{"role": "user", "content": user_query}],
-                        "users": [user_id, username], # Track Discord User
+                        "query": final_query,
+                        "history": messages, # Pass full history
+                        "users": [user_id, username], 
                         "force_create": True
                     }
                     
@@ -107,7 +129,7 @@ async def on_message(message):
                             draft_sol = ticket_data.get("solution", "")
                             
                             # Ticket Confirmation (Plain Text)
-                            msg = f"**🎫 Ticket Created: {t_id}**\n\nI've logged this for an admin to review.\n\n**Issue:** {user_query}\n**Status:** Pending"
+                            msg = f"**🎫 Ticket Created: {t_id}**\n\nI've logged this for an admin to review.\n\n**Issue:** {final_query}\n**Status:** Pending"
                             if draft_sol:
                                 msg += f"\n\n**Preliminary Suggestion:**\n{draft_sol}"
                             

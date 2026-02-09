@@ -76,6 +76,7 @@ class CreateTicketRequest(BaseModel):
     history: List[dict] = [] # NEW: Full chat history
     users: List[str] = ["User_Unknown"]
     force_create: bool = False
+    thread_id: Optional[int] = None
 
 class BroadcastRequest(BaseModel):
     ticket_id: str
@@ -101,6 +102,11 @@ class Response(BaseModel):
     solution_draft: str = Field(description="Admin draft solution or Chat response")
     escalation_required: bool = Field(default=False, description="True if escalation is required")
     is_it_related: bool = Field(default=True, description="True if query is IT Support related (hardware, software, network, account, etc.). False for chit-chat, weather, general knowledge.")
+
+class MessageAppendRequest(BaseModel):
+    role: str
+    message: str
+
 
 # --- Database Ops ---
 def load_db():
@@ -236,7 +242,7 @@ Return JSON:
             
         # Use the wrapped client to call the new API
         response = client.models.generate_content(
-            model="gemini-flash-latest",
+            model="gemini-2.5-flash-lite",
             contents=prompt,
             config={
                 "response_mime_type": "application/json",
@@ -345,7 +351,14 @@ async def create_ticket(req: CreateTicketRequest):
     # AI Analysis for categorization (if not provided/if needed)
     # If the frontend passes a 'summary' as 'req.query', we use it.
     # We still run analyze_with_gemini to get metadata categorization based on that summary/query.
-    ai_result = analyze_with_gemini(req.query, mode="ticket")
+    
+    # NEW: Construct full prompt from history for better context
+    analysis_input = req.query
+    if req.history:
+        history_str = "\n".join([f"{m.get('role', 'User')}: {m.get('content', m.get('message', ''))}" for m in req.history])
+        analysis_input = f"{history_str}\n\nUser Request: {req.query}"
+
+    ai_result = analyze_with_gemini(analysis_input, mode="ticket")
     conf = ai_result.get("confidence", "low")
     meta = ai_result.get("ticket_metadata", {})
     draft = ai_result.get("solution_draft", "")
@@ -389,16 +402,24 @@ async def create_ticket(req: CreateTicketRequest):
             "time": time.strftime("%H:%M")
         })
 
+    # If query is short (e.g. "ticket"), use AI summary
+    final_query = req.query
+    if len(req.query.split()) < 4 and ai_result.get("summary"):
+        final_query = ai_result.get("summary")
+    
     new_ticket = {
         "id": new_id,
-        "title": meta.get("title", "Support Request"),
-        "query": req.query, 
+        "title": meta.get("title", final_query),
+        "query": final_query, 
         "category": meta.get("category", "Others"),
         "subcategory": meta.get("subcategory", "General"),
         "ai_draft": draft,
+        "admin_draft": draft,
         "status": "Pending",
         "group_id": new_id,
-        "history": ticket_history
+        "users": req.users,
+        "history": ticket_history,
+        "thread_id": req.thread_id
     }
     
     db.append(new_ticket)
@@ -451,7 +472,7 @@ def standardize_resolution(text: str) -> str:
         # Use the wrapped client if available, else gemini_client
         c = client if 'client' in globals() else gemini_client
         response = c.models.generate_content(
-            model="gemini-flash-latest",
+            model="gemini-2.5-flash-lite",
             contents=prompt,
         )
         
@@ -462,6 +483,35 @@ def standardize_resolution(text: str) -> str:
     except Exception as e:
         print(f"Standardization Error: {e}")
         return text
+
+@app.post("/tickets/{ticket_id}/messages")
+async def append_ticket_message(ticket_id: str, req: MessageAppendRequest):
+    """
+    Appends a message to the ticket's history.
+    """
+    db = load_db()
+    
+    # Simple search
+    ticket = None
+    for t in db:
+        if t["id"] == ticket_id:
+            ticket = t
+            break
+            
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    
+    if "history" not in ticket:
+        ticket["history"] = []
+        
+    ticket["history"].append({
+        "role": req.role,
+        "message": req.message,
+        "time": time.strftime("%H:%M")
+    })
+    
+    save_db(db)
+    return {"status": "updated", "history_length": len(ticket["history"])}
 
 @app.post("/broadcast")
 async def broadcast_solution(req: BroadcastRequest):
