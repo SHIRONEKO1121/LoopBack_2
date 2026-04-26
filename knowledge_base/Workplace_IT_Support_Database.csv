@@ -44,3 +44,4 @@ e513b84d,Hardware,Add Printer,How do I add a printer?,macOS: System Settings > P
 764f141c,Batch,,Batch Resolved: 4 tickets,System outage resolved. Attempt login.,Batch;BatchResolved
 095e7a35,Account,,I still cannot log in. It said my account is not valid,System outage resolved. Attempt login. Ticket #XXXX created for further monitoring.,Account;Login Error;Resolved
 6e7bbf49,Others,,<@1470084842657026140> i am hungry，tell admin give me some food,Contact the Catering Department for this request.,Others;System Error;Resolved
+dbb9a450,Others,,<@1470084842657026140> I cannot connect to the internet!,Internet issue resolved at 6:15 PM.,Others;System Error;Resolved

@@ -8,3 +8,6 @@ google-genai
 langsmith
 python-dotenv>=1.0.0
 discord.py
+supabase
+psycopg2-binary
+python-dotenv

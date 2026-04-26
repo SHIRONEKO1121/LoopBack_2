@@ -1307,5 +1307,848 @@
             }
         ],
         "thread_id": null
+    },
+    {
+        "id": "TKT-1033",
+        "title": "Error",
+        "query": "System Error",
+        "category": "Others",
+        "subcategory": "System Error",
+        "ai_draft": "System Error: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-3-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+        "admin_draft": "System Error: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-3-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+        "status": "Pending",
+        "group_id": "TKT-1033",
+        "users": [
+            "596235052749422592",
+            "cclemon1514"
+        ],
+        "history": [
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "don play rickroll",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "don leave",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/toast-usagi-gif-298603599025900020",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/chiikawa-shisa-shiisa-dance-gif-11597910716568950099",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F-%E3%81%86%E3%81%95%E3%81%8E-%E3%83%8F%E3%83%81%E3%83%AF%E3%83%B3-dance-%E3%83%8F%E3%83%81%E3%83%AF%E3%83%AC%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F-gif-18094540054107364507",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/shisa-chiikawa-gif-4804303089980774683",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/shisa-chiikawa-gif-5386175662932055526",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> hi",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> hi",
+                "time": "17:46"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> Hi",
+                "time": "17:46"
+            }
+        ],
+        "thread_id": null,
+        "notified": true
+    },
+    {
+        "id": "TKT-1034",
+        "title": "Error",
+        "query": "<@1470084842657026140> I cannot connect to the internet!",
+        "category": "Others",
+        "subcategory": "System Error",
+        "ai_draft": "System Error: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-3-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+        "admin_draft": "System Error: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-3-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+        "status": "Resolved",
+        "group_id": "TKT-1034",
+        "users": [
+            "596235052749422592",
+            "cclemon1514"
+        ],
+        "history": [
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "don play rickroll",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "don leave",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/toast-usagi-gif-298603599025900020",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/chiikawa-shisa-shiisa-dance-gif-11597910716568950099",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F-%E3%81%86%E3%81%95%E3%81%8E-%E3%83%8F%E3%83%81%E3%83%AF%E3%83%B3-dance-%E3%83%8F%E3%83%81%E3%83%AF%E3%83%AC%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F-gif-18094540054107364507",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/shisa-chiikawa-gif-4804303089980774683",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/shisa-chiikawa-gif-5386175662932055526",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> hi",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> hi",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> Hi",
+                "time": "17:47"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> I cannot connect to the internet!",
+                "time": "17:47"
+            },
+            {
+                "role": "model",
+                "message": "**Resolution:** Sorry for the error. The internet issue has been resolved at 6:15 PM. ",
+                "time": "18:17"
+            },
+            {
+                "role": "model",
+                "message": "**Resolution:** Sorry for the error. The internet issue has been resolved at 6:15 PM. ",
+                "time": "18:17"
+            }
+        ],
+        "thread_id": null,
+        "notified": true,
+        "final_answer": "Sorry for the error. The internet issue has been resolved at 6:15 PM. "
+    },
+    {
+        "id": "TKT-1035",
+        "title": "Live Agent Request",
+        "query": "User requests live agent assistance as the current automated interaction is insufficient.",
+        "category": "Others",
+        "subcategory": "Live Agent",
+        "ai_draft": "I have escalated your request to a support agent. An agent will contact you shortly to provide further assistance.",
+        "admin_draft": "I have escalated your request to a support agent. An agent will contact you shortly to provide further assistance.",
+        "status": "Resolved",
+        "group_id": "TKT-1035",
+        "users": [
+            "596235052749422592",
+            "cclemon1514"
+        ],
+        "history": [
+            {
+                "role": "model",
+                "message": "**Hello! How can I assist you today?\n\n*Is this helpful? If not, reply with 'ticket' to talk to a human.*",
+                "time": "17:49"
+            },
+            {
+                "role": "user",
+                "message": "ticket",
+                "time": "17:49"
+            },
+            {
+                "role": "admin",
+                "message": "Could you please provide more details about this issue?",
+                "time": "18:06"
+            },
+            {
+                "role": "model",
+                "message": "**Resolution:** test",
+                "time": "18:07"
+            }
+        ],
+        "thread_id": null,
+        "notified": true,
+        "final_answer": "test"
+    },
+    {
+        "id": "TKT-1036",
+        "title": "Internet Connectivity Issue",
+        "query": "<@1470084842657026140> Help! My internet is down!",
+        "category": "Network",
+        "subcategory": "Internet Access",
+        "ai_draft": "I understand you are experiencing issues with your internet connection. To help me troubleshoot, could you please tell me if you are connected via Wi-Fi or an ethernet cable, and if you have already tried restarting your router/modem or your device?",
+        "admin_draft": "I understand you are experiencing issues with your internet connection. To help me troubleshoot, could you please tell me if you are connected via Wi-Fi or an ethernet cable, and if you have already tried restarting your router/modem or your device?",
+        "status": "Pending",
+        "group_id": "TKT-1036",
+        "users": [
+            "596235052749422592",
+            "cclemon1514"
+        ],
+        "history": [
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "nigger",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "don play rickroll",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "don leave",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "wah",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/toast-usagi-gif-298603599025900020",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/chiikawa-shisa-shiisa-dance-gif-11597910716568950099",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F-%E3%81%86%E3%81%95%E3%81%8E-%E3%83%8F%E3%83%81%E3%83%AF%E3%83%B3-dance-%E3%83%8F%E3%83%81%E3%83%AF%E3%83%AC%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F-gif-18094540054107364507",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/shisa-chiikawa-gif-4804303089980774683",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "https://tenor.com/view/shisa-chiikawa-gif-5386175662932055526",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> hi",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> hi",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> Hi",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> I cannot connect to the internet!",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> Hello",
+                "time": "18:20"
+            },
+            {
+                "role": "model",
+                "message": "[Ticket TKT-1034] **\u2705 Ticket Resolved: TKT-1034**\n\n**Issue:** <@1470084842657026140> I cannot connect to the internet!\n**Resolution:** Sorry for the error. The internet issue has been resolved at 6:15 PM.",
+                "time": "18:20"
+            },
+            {
+                "role": "user",
+                "message": "<@1470084842657026140> Help! My internet is down!",
+                "time": "18:20"
+            }
+        ],
+        "thread_id": 1498010885439098890,
+        "notified": true
     }
 ]

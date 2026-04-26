@@ -119,7 +119,8 @@ async def on_message(message):
                         "query": final_query,
                         "history": messages, # Pass full history
                         "users": [user_id, username], 
-                        "force_create": True
+                        "force_create": True,
+                        "thread_id": getattr(thread, "id", None)
                     }
                     
                     async with session.post(f"{API_URL}/tickets", json=ticket_payload) as resp:
@@ -195,11 +196,15 @@ async def check_resolved_tickets():
                             # 2. Fallback to DM if not sent to thread
                             if not sent and users:
                                 discord_user_id = None
-                                # Try to find the numeric ID string
+                                # Try to find the numeric ID string (handle int or str)
                                 for u in users:
-                                    if u.isdigit(): 
-                                        discord_user_id = int(u)
-                                        break
+                                    try:
+                                        s = str(u)
+                                        if s.isdigit():
+                                            discord_user_id = int(s)
+                                            break
+                                    except Exception:
+                                        continue
                                 
                                 if discord_user_id:
                                     user = bot.get_user(discord_user_id)
@@ -213,21 +218,38 @@ async def check_resolved_tickets():
                                             await user.send(msg_content)
                                             sent = True
                                             print(f"DTO sent to DM {user.name} for {val_id}")
-                                        except:
+                                        except Exception as dm_ex:
+                                            print(f"DM failed for {discord_user_id}: {dm_ex}")
                                             # Fallback to channel if DM fails
                                             if DISCORD_CHANNEL_ID:
-                                                ch = bot.get_channel(int(DISCORD_CHANNEL_ID))
-                                                if ch: await ch.send(content=f"<@{discord_user_id}> \n{msg_content}")
-                                                sent = True
+                                                try:
+                                                    ch = bot.get_channel(int(DISCORD_CHANNEL_ID))
+                                                    if ch:
+                                                        await ch.send(content=f"<@{discord_user_id}> \n{msg_content}")
+                                                        sent = True
+                                                except Exception as ch_ex:
+                                                    print(f"Fallback channel send failed: {ch_ex}")
+                                        else:
+                                            # No numeric discord id found. Fallback: post to configured admin channel
+                                            try:
+                                                if DISCORD_CHANNEL_ID:
+                                                    ch = bot.get_channel(int(DISCORD_CHANNEL_ID))
+                                                    fallback_msg = f"[Ticket {val_id}] {msg_content}"
+                                                    if ch:
+                                                        await ch.send(fallback_msg)
+                                                        sent = True
+                                            except Exception as fb_ex:
+                                                print(f"Fallback post to admin channel failed: {fb_ex}")
                             
                             # 3. ACK Notification to Backend
                             if sent:
                                 try:
                                     async with session.post(f"{API_URL}/tickets/{val_id}/ack_notification") as ack_resp:
+                                        text = await ack_resp.text()
                                         if ack_resp.status == 200:
-                                            print(f"✅ Acked notification for {val_id}")
+                                            print(f"✅ Acked notification for {val_id}: {text}")
                                         else:
-                                            print(f"❌ Failed to ack notification for {val_id}: {ack_resp.status}")
+                                            print(f"❌ Failed to ack notification for {val_id}: {ack_resp.status} - {text}")
                                 except Exception as ex:
                                     print(f"Exception acking notification: {ex}")
 

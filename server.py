@@ -244,7 +244,7 @@ Return JSON:
             
         # Use the wrapped client to call the new API
         response = client.models.generate_content(
-            model="gemini-3-pro",
+            model="gemini-2.5-flash",
             contents=prompt,
             config={
                 "response_mime_type": "application/json",
@@ -486,7 +486,7 @@ def standardize_resolution(text: str) -> str:
         # Use the wrapped client if available, else gemini_client
         c = client if 'client' in globals() else gemini_client
         response = c.models.generate_content(
-            model="gemini-3-pro",
+            model="gemini-2.5-flash",
             contents=prompt,
         )
         
