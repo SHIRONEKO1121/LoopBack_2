@@ -1,6 +1,5 @@
 import os
 import json
-import csv
 import time
 import datetime
 import uuid
@@ -14,6 +13,8 @@ from dotenv import load_dotenv
 from google import genai
 from langsmith import wrappers
 from difflib import SequenceMatcher
+from db.repositories import FAQRepository, TicketRepository
+from db.supabase_client import get_supabase_client, is_supabase_enabled
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -55,8 +56,15 @@ app.add_middleware(
 # --- Paths ---
 BASE_DIR = Path(__file__).parent
 KB_DIR = BASE_DIR / "knowledge_base"
-DB_FILE = BASE_DIR / "tickets_db.json"
-KB_CSV = KB_DIR / "Workplace_IT_Support_Database.csv"
+
+# --- Repositories ---
+ticket_repo = None
+faq_repo = None
+
+if is_supabase_enabled():
+    supabase_client = get_supabase_client()
+    ticket_repo = TicketRepository(supabase_client)
+    faq_repo = FAQRepository(supabase_client)
 
 # --- Data Models ---
 class Ticket(BaseModel):
@@ -110,62 +118,47 @@ class MessageAppendRequest(BaseModel):
     message: str
 
 
-# --- Database Ops ---
-def load_db():
-    if not DB_FILE.exists(): return []
-    try:
-        with open(DB_FILE, "r") as f: return json.load(f)
-    except: return []
-
-def save_db(data):
-    with open(DB_FILE, "w") as f: json.dump(data, f, indent=4)
-
 # --- Helper Functions ---
 def get_kb_context_summary(query: str = ""):
-    """Returns top relevant KB items based on query keywords."""
-    if not KB_CSV.exists():
-        print("DEBUG: ⚠️ KB CSV not found")
+    """Returns top relevant KB items from Supabase based on query keywords."""
+    if not faq_repo:
+        print("DEBUG: ⚠️ FAQ repository not initialized")
         return ""
     
     summary = []
     # robust tokenization: strip punctuation and lowercase
     import re
     query_words = set(re.findall(r'\w+', query.lower())) if query else set()
-    print(f"DEBUG: 🔍 KB Search Query: '{query}' Tokens: {query_words}")
-    
-    try:
-        with open(KB_CSV, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            scored_rows = []
-            for row in reader:
-                # Search robustly across multiple fields
-                search_text = (
-                    f"{row.get('Category','')} "
-                    f"{row.get('Issue','')} "
-                    f"{row.get('Question','')} "
-                    f"{row.get('Tags','')}"
-                ).lower()
-                
-                match_count = sum(1 for w in query_words if w in search_text)
-                
-                if match_count > 0:
-                    # Provide FULL resolution for better context
-                    content = f"Issue: {row['Issue']}\nQuestion: {row['Question']}\nResolution: {row['Resolution']}\n"
-                    scored_rows.append((match_count, content))
-            
-            # Sort by score desc
-            scored_rows.sort(key=lambda x: x[0], reverse=True)
-            
-            # Log top matches for debugging
-            print(f"DEBUG: 🔢 Found {len(scored_rows)} matches.")
-            for i, (score, content) in enumerate(scored_rows[:3]):
-                print(f"DEBUG:   Match #{i+1} (Score: {score}): {content.splitlines()[0]}")
+    print(f"DEBUG: 🔍 FAQ Search Query: '{query}' Tokens: {query_words}")
 
-            summary = [item[1] for item in scored_rows[:3]] # Top 3 is enough if full content
-            
+    scored_rows = []
+    try:
+        for row in faq_repo.list_entries(limit=50):
+            search_text = (
+                f"{row.get('category','')} "
+                f"{row.get('issue','')} "
+                f"{row.get('question','')} "
+                f"{row.get('tags','')}"
+            ).lower()
+
+            match_count = sum(1 for w in query_words if w in search_text)
+
+            if match_count > 0:
+                content = (
+                    f"Issue: {row.get('issue', '')}\n"
+                    f"Question: {row.get('question', '')}\n"
+                    f"Resolution: {row.get('resolution', '')}\n"
+                )
+                scored_rows.append((match_count, content))
+
+        scored_rows.sort(key=lambda x: x[0], reverse=True)
+        print(f"DEBUG: 🔢 Found {len(scored_rows)} FAQ matches.")
+        for i, (score, content) in enumerate(scored_rows[:3]):
+            print(f"DEBUG:   Match #{i+1} (Score: {score}): {content.splitlines()[0]}")
+        summary = [item[1] for item in scored_rows[:3]]
+
     except Exception as e:
-        print(f"DEBUG: ❌ KB Search Error: {e}")
-        pass
+        print(f"DEBUG: ❌ FAQ Search Error: {e}")
         
     return "\n---\n".join(summary)
 
@@ -294,31 +287,18 @@ Return JSON:
 # --- Endpoints ---
 @app.get("/tickets")
 async def get_tickets():
-    return load_db()
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+    return ticket_repo.list_tickets()
 
 @app.post("/tickets/{ticket_id}/ack_notification")
 async def ack_notification(ticket_id: str):
     """Called by the bot to confirm it has notified the user."""
-    db = load_db()
-    for t in db:
-        if t["id"] == ticket_id:
-            t["notified"] = True
-            save_db(db)
-            return {"status": "acked"}
+    if ticket_repo and ticket_repo.ack_notification(ticket_id):
+        return {"status": "acked"}
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
     raise HTTPException(status_code=404, detail="Ticket not found")
-
-@app.get("/knowledge-base")
-async def get_knowledge_base():
-    """Returns the full Knowledge Base as JSON."""
-    if not KB_CSV.exists(): return []
-    data = []
-    try:
-        with open(KB_CSV, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            data = [row for row in reader]
-    except Exception as e:
-        print(f"Error reading KB: {e}")
-    return data
 
 class ChatRequest(BaseModel):
     message: str
@@ -386,18 +366,11 @@ async def create_ticket(req: CreateTicketRequest):
             "ticket_id": None # No ticket created
         }
 
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
     # 3. Create Ticket (Low Confidence OR User Forced)
-    db = load_db()
-    
-    # ID Generation
-    max_id = 1000
-    for t in db:
-        try:
-            tid = int(t.get("id", "TKT-1000").replace("TKT-", ""))
-            if tid > max_id: max_id = tid
-        except: pass
-    new_id = f"TKT-{max_id + 1}"
-    
+
     # Prepare history
     ticket_history = []
     if req.history:
@@ -421,7 +394,6 @@ async def create_ticket(req: CreateTicketRequest):
         final_query = ai_result.get("summary")
     
     new_ticket = {
-        "id": new_id,
         "title": meta.get("title", final_query),
         "query": final_query, 
         "category": meta.get("category", "Others"),
@@ -429,42 +401,40 @@ async def create_ticket(req: CreateTicketRequest):
         "ai_draft": draft,
         "admin_draft": draft,
         "status": "Pending",
-        "group_id": new_id,
+        "group_id": None,
         "users": req.users,
         "history": ticket_history,
         "thread_id": req.thread_id,
         "notified": True # Created by bot, so user knows.
     }
-    
-    db.append(new_ticket)
-    save_db(db)
-    
+
+    created_ticket = ticket_repo.create_ticket(new_ticket)
+    ticket_id = created_ticket.get("id")
+    if ticket_id and created_ticket.get("group_id") in [None, ""]:
+        ticket_repo.update_ticket(ticket_id, {"group_id": ticket_id})
     return {
         "status": "created", 
-        "ticket_id": new_id, 
+        "ticket_id": ticket_id, 
         "confidence": conf,
         "solution": draft if conf == "high" else None
     }
 
 def kb_entry_exists(new_query: str) -> bool:
-    """Checks if a similar query already exists in the KB."""
-    if not KB_CSV.exists(): return False
-    
+    """Checks if a similar query already exists in the FAQ repository."""
+    if not faq_repo:
+        return False
+
     try:
-        with open(KB_CSV, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                existing_q = row.get('Question', '')
-                existing_i = row.get('Issue', '')
-                
-                # Check similarity against both Question and Issue fields
-                for text in [existing_q, existing_i]:
-                    if not text: continue
-                    ratio = SequenceMatcher(None, new_query.lower(), text.lower()).ratio()
-                    if ratio > 0.85: # High similarity threshold
-                        print(f"DEBUG: 🚫 KB Duplicate prevented: '{new_query}' similar to '{text}' ({ratio:.2f})")
-                        return True
-    except: pass
+        for row in faq_repo.list_entries(limit=200):
+            for text in [row.get('question', ''), row.get('issue', '')]:
+                if not text:
+                    continue
+                ratio = SequenceMatcher(None, new_query.lower(), text.lower()).ratio()
+                if ratio > 0.85:
+                    print(f"DEBUG: 🚫 FAQ Duplicate prevented: '{new_query}' similar to '{text}' ({ratio:.2f})")
+                    return True
+    except Exception as e:
+        print(f"DEBUG: ❌ FAQ duplicate check error: {e}")
     return False
 
 def standardize_resolution(text: str) -> str:
@@ -503,168 +473,135 @@ async def append_ticket_message(ticket_id: str, req: MessageAppendRequest):
     """
     Appends a message to the ticket's history.
     """
-    db = load_db()
-    
-    # Simple search
-    ticket = None
-    for t in db:
-        if t["id"] == ticket_id:
-            ticket = t
-            break
-            
-    if not ticket:
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    updated_ticket = ticket_repo.append_history_message(ticket_id, req.role, req.message)
+    if not updated_ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
-    
-    if "history" not in ticket:
-        ticket["history"] = []
-        
-    ticket["history"].append({
-        "role": req.role,
-        "message": req.message,
-        "time": time.strftime("%H:%M")
-    })
-    
-    save_db(db)
-    return {"status": "updated", "history_length": len(ticket["history"])}
+    return {"status": "updated", "history_length": len(updated_ticket.get("history", []))}
 
 @app.post("/broadcast")
 async def broadcast_solution(req: BroadcastRequest):
-    db = load_db()
-    
-    # Find ticket info for KB learning
-    target_ticket_query = ""
-    target_category = ""
-    target_subcategory = ""
-    
-    for t in db:
-        if t["id"] == req.ticket_id:
-            target_ticket_query = t.get("query", "")
-            target_category = t.get("category", "Support")
-            target_subcategory = t.get("subcategory", "")
-            break
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
 
-    count = 0
-    for t in db:
-        if t["id"] == req.ticket_id:
-            t["status"] = "Resolved"
-            t["final_answer"] = req.final_answer
-            t["notified"] = False  # Trigger bot notification
-            t.setdefault("history", []).append({
-                "role": "model",
-                "message": f"**Resolution:** {req.final_answer}",
-                "time": time.strftime("%H:%M")
-            })
-            count += 1
-            
-    save_db(db)
-    
-    # Knowledge Base Learning
-    if target_ticket_query and req.final_answer and is_quality_solution(req.final_answer):
-        # Check for duplicates
+    ticket = ticket_repo.get_ticket(req.ticket_id)
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+
+    updated_ticket = ticket_repo.update_ticket(
+        req.ticket_id,
+        {
+            "status": "Resolved",
+            "final_answer": req.final_answer,
+            "notified": False,
+        },
+    )
+    ticket_repo.append_history_message(req.ticket_id, "model", f"**Resolution:** {req.final_answer}")
+
+    if ticket and req.final_answer and is_quality_solution(req.final_answer) and faq_repo:
+        target_ticket_query = ticket.get("query", "")
+        target_category = ticket.get("category", "Support")
+        target_subcategory = ticket.get("subcategory", "")
+
         if kb_entry_exists(target_ticket_query):
-             print(f"DEBUG: ⏭️ Skipping KB update (Duplicate detected)")
+            print(f"DEBUG: ⏭️ Skipping KB update (Duplicate detected)")
         else:
             try:
-                with open(KB_CSV, 'a', newline='', encoding='utf-8') as f:
-                    writer = csv.writer(f)
-                    
-                    # Standardize resolution
-                    std_resolution = standardize_resolution(req.final_answer)
-                    
-                    # Generate ID
-                    new_id = str(uuid.uuid4())[:8]
-
-                    writer.writerow([
-                        new_id,
-                        target_category, # Only Major Category
-                        "", # Empty Issue column
-                        target_ticket_query, 
-                        std_resolution, 
-                        f"{target_category};{target_subcategory or ''};Resolved"
-                    ])
-                    print(f"DEBUG: 📚 Added solution to Knowledge Base")
+                std_resolution = standardize_resolution(req.final_answer)
+                faq_repo.create_entry(
+                    {
+                        "category": target_category,
+                        "issue": "",
+                        "question": target_ticket_query,
+                        "resolution": std_resolution,
+                        "tags": f"{target_category};{target_subcategory or ''};Resolved",
+                    }
+                )
+                print(f"DEBUG: 📚 Added solution to Knowledge Base")
             except Exception as e:
                 print(f"DEBUG: ❌ Failed to update Knowledge Base: {e}")
 
-    return {"status": "success", "resolved": count}
+    return {"status": "success", "resolved": 1 if updated_ticket else 0}
 
 @app.post("/broadcast_all")
 async def broadcast_all(req: BroadcastAllRequest):
-    db = load_db()
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    tickets = ticket_repo.list_tickets()
     count = 0
-    resolved_ids = []
-    
-    for t in db:
+    for t in tickets:
         if t["status"] == "Pending":
             update = False
             if req.ticket_ids and t["id"] in req.ticket_ids:
                 update = True
             elif req.category and t.get("category") == req.category:
-                 update = True
-            
+                update = True
+
             if update:
-                t["status"] = "Resolved"
-                t["final_answer"] = req.final_answer
-                t["notified"] = False # Trigger notification
-                t.setdefault("history", []).append({
-                    "role": "model",
-                    "message": f"**Resolution Broadcast:** {req.final_answer}",
-                    "time": time.strftime("%H:%M")
-                })
+                ticket_repo.update_ticket(
+                    t["id"],
+                    {
+                        "status": "Resolved",
+                        "final_answer": req.final_answer,
+                        "notified": False,
+                    },
+                )
+                ticket_repo.append_history_message(
+                    t["id"],
+                    "model",
+                    f"**Resolution Broadcast:** {req.final_answer}",
+                )
                 count += 1
-                resolved_ids.append(t["id"])
-    
-    save_db(db)
-    
-    # Batch learning
-    if count > 0 and is_quality_solution(req.final_answer):
+
+    if count > 0 and is_quality_solution(req.final_answer) and faq_repo:
         start_cat = req.category or "Batch"
         batch_query = f"Batch Resolved: {count} tickets"
-        
+
         if kb_entry_exists(batch_query):
-             print(f"DEBUG: ⏭️ Skipping Batch KB update (Duplicate detected)")
+            print(f"DEBUG: ⏭️ Skipping Batch KB update (Duplicate detected)")
         else:
             try:
-                # Standardize batch resolution
                 std_batch_res = standardize_resolution(req.final_answer)
-                
-                # Generate ID
-                new_id = str(uuid.uuid4())[:8]
-
-                with open(KB_CSV, 'a', newline='', encoding='utf-8') as f:
-                    writer = csv.writer(f)
-                    writer.writerow([
-                        new_id,
-                        start_cat, # Major Category
-                        "", # Empty Issue
-                        batch_query,
-                        std_batch_res,
-                        f"{start_cat};BatchResolved"
-                    ])
-            except: pass
+                faq_repo.create_entry(
+                    {
+                        "category": start_cat,
+                        "issue": "",
+                        "question": batch_query,
+                        "resolution": std_batch_res,
+                        "tags": f"{start_cat};BatchResolved",
+                    }
+                )
+            except Exception:
+                pass
 
     return {"status": "success", "resolved": count}
 
 @app.delete("/tickets/{ticket_id}")
 async def delete_ticket(ticket_id: str):
-    db = load_db()
-    db = [t for t in db if t["id"] != ticket_id]
-    save_db(db)
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    ticket_repo.delete_ticket(ticket_id)
     return {"status": "deleted"}
 
 @app.post("/tickets/{ticket_id}/ask")
 async def ask_user(ticket_id: str, req: AskRequest):
-    db = load_db()
-    for t in db:
-        if t["id"] == ticket_id:
-            t["status"] = "Awaiting Info"
-            t["notified"] = False  # Trigger notification
-            t["history"].append({
-                "role": "admin",
-                "message": req.question,
-                "time": time.strftime("%H:%M")
-            })
-    save_db(db)
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    updated_ticket = ticket_repo.update_ticket(
+        ticket_id,
+        {
+            "status": "Awaiting Info",
+            "notified": False,
+        },
+    )
+    if not updated_ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    ticket_repo.append_history_message(ticket_id, "admin", req.question)
     return {"status": "sent"}
 
 @app.post("/tickets/{ticket_id}/resolve")
@@ -673,25 +610,24 @@ async def resolve_ticket_user(ticket_id: str):
     Endpoint for users to mark their own ticket as resolved
     (e.g., if the AI suggestion worked).
     """
-    db = load_db()
-    found = False
-    for t in db:
-        if t["id"] == ticket_id:
-            t["status"] = "Self-Resolved"
-            t["final_answer"] = "User marked as resolved based on AI suggestion."
-            t["history"].append({
-                "role": "user",
-                "message": "This solution worked for me. Closing ticket.",
-                "time": time.strftime("%H:%M")
-            })
-            found = True
-            break
-    
-    if found:
-        save_db(db)
-        return {"status": "resolved"}
-    else:
+    if not ticket_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    updated_ticket = ticket_repo.update_ticket(
+        ticket_id,
+        {
+            "status": "Self-Resolved",
+            "final_answer": "User marked as resolved based on AI suggestion.",
+        },
+    )
+    if not updated_ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
+    ticket_repo.append_history_message(
+        ticket_id,
+        "user",
+        "This solution worked for me. Closing ticket.",
+    )
+    return {"status": "resolved"}
 
 # --- Knowledge Base CRUD ---
 
@@ -704,128 +640,57 @@ class KBEntry(BaseModel):
     tags: Optional[str] = None
 
 @app.get("/knowledge-base")
-async def get_kb_entries():
+async def get_kb_entries(limit: int = 5):
     """Returns all KB entries."""
-    if not KB_CSV.exists():
-        return []
-    
-    entries = []
-    try:
-        with open(KB_CSV, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            entries = list(reader)
-    except Exception as e:
-        print(f"Error reading KB: {e}")
-        return []
-    return entries
+    if not faq_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+    return faq_repo.list_entries(limit=limit)
 
 @app.post("/knowledge-base")
 async def create_kb_entry(entry: KBEntry):
     """Creates a new KB entry."""
-    new_id = str(uuid.uuid4())[:8]
-    entry.id = new_id
-    
-    # Standardize resolution if not already
-    entry.resolution = standardize_resolution(entry.resolution)
-    
-    fieldnames = ['ID', 'Category', 'Issue', 'Question', 'Resolution', 'Tags']
-    
-    try:
-        # Append to CSV
-        file_exists = KB_CSV.exists()
-        with open(KB_CSV, 'a', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            if not file_exists:
-                writer.writeheader()
-            writer.writerow({
-                'ID': entry.id,
-                'Category': entry.category,
-                'Issue': "", # Deprecated/Empty
-                'Question': entry.question,
-                'Resolution': entry.resolution,
-                'Tags': entry.tags or ""
-            })
-        return {"status": "created", "entry": entry}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    if not faq_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    created_entry = faq_repo.create_entry(
+        {
+            "category": entry.category,
+            "issue": entry.issue or "",
+            "question": entry.question,
+            "resolution": standardize_resolution(entry.resolution),
+            "tags": entry.tags or "",
+        }
+    )
+    return {"status": "created", "entry": created_entry}
 
 @app.put("/knowledge-base/{entry_id}")
 async def update_kb_entry(entry_id: str, entry: KBEntry):
     """Updates an existing KB entry."""
-    if not KB_CSV.exists():
-        raise HTTPException(status_code=404, detail="KB not found")
-        
-    updated = False
-    temp_file = KB_CSV.with_suffix('.tmp')
-    
-    try:
-        with open(KB_CSV, 'r', encoding='utf-8') as infile, \
-             open(temp_file, 'w', newline='', encoding='utf-8') as outfile:
-            
-            reader = csv.DictReader(infile)
-            fieldnames = reader.fieldnames
-            writer = csv.DictWriter(outfile, fieldnames=fieldnames)
-            writer.writeheader()
-            
-            for row in reader:
-                if row.get('ID') == entry_id:
-                    writer.writerow({
-                        'ID': entry_id,
-                        'Category': entry.category,
-                        'Issue': "", # Deprecated/Empty
-                        'Question': entry.question,
-                        'Resolution': entry.resolution, 
-                        'Tags': entry.tags or row.get('Tags', "")
-                    })
-                    updated = True
-                else:
-                    writer.writerow(row)
-        
-        if updated:
-            temp_file.replace(KB_CSV)
-            return {"status": "updated", "entry": entry}
-        else:
-            temp_file.unlink(missing_ok=True)
-            raise HTTPException(status_code=404, detail="Entry not found")
-            
-    except Exception as e:
-        if temp_file.exists(): temp_file.unlink()
-        raise HTTPException(status_code=500, detail=str(e))
+    if not faq_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    updated_entry = faq_repo.update_entry(
+        entry_id,
+        {
+            "category": entry.category,
+            "issue": entry.issue or "",
+            "question": entry.question,
+            "resolution": standardize_resolution(entry.resolution),
+            "tags": entry.tags or "",
+        },
+    )
+    if updated_entry:
+        return {"status": "updated", "entry": updated_entry}
+    raise HTTPException(status_code=404, detail="Entry not found")
 
 @app.delete("/knowledge-base/{entry_id}")
 async def delete_kb_entry(entry_id: str):
     """Deletes a KB entry."""
-    if not KB_CSV.exists():
-        raise HTTPException(status_code=404, detail="KB not found")
-        
-    deleted = False
-    temp_file = KB_CSV.with_suffix('.tmp')
-    
-    try:
-        with open(KB_CSV, 'r', encoding='utf-8') as infile, \
-             open(temp_file, 'w', newline='', encoding='utf-8') as outfile:
-            
-            reader = csv.DictReader(infile)
-            fieldnames = reader.fieldnames
-            writer = csv.DictWriter(outfile, fieldnames=fieldnames)
-            writer.writeheader()
-            
-            for row in reader:
-                if row.get('ID') == entry_id:
-                    deleted = True
-                    continue
-                writer.writerow(row)
-        
-        if deleted:
-            temp_file.replace(KB_CSV)
-            return {"status": "deleted"}
-        else:
-            temp_file.unlink(missing_ok=True)
-            raise HTTPException(status_code=404, detail="Entry not found")
-            
-    except Exception as e:
-        if temp_file.exists(): temp_file.unlink()
-        raise HTTPException(status_code=500, detail=str(e))
+    if not faq_repo:
+        raise HTTPException(status_code=503, detail="Supabase is not configured")
+
+    faq_repo.delete_entry(entry_id)
+    return {"status": "deleted"}
 
 if __name__ == "__main__":
     import uvicorn

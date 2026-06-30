@@ -22,7 +22,7 @@ function DatabaseViewer({ onClose }) {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`${API_URL}/knowledge-base`);
+            const response = await axios.get(`${API_URL}/knowledge-base?limit=5`);
             setData(response.data);
             setLastUpdated(new Date());
         } catch (error) {

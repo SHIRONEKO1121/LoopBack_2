@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Send, Trash2, Zap, Search, Bell, HelpCircle, User } from 'lucide-react';
+import { ShieldCheck, Send, Trash2, Zap, Search, Bell, HelpCircle } from 'lucide-react';
 import './App.css';
 import DatabaseViewer from './DatabaseViewer';
-import UserPortal from './UserPortal';
 
 const API_URL = 'http://localhost:8000';
 
@@ -16,9 +15,6 @@ function App() {
   const [showBroadcastAll, setShowBroadcastAll] = useState(false);
   const [broadcastAllText, setBroadcastAllText] = useState('');
   const [showDatabase, setShowDatabase] = useState(false);
-
-  // View Toggle State
-  const [viewMode, setViewMode] = useState('admin'); // 'admin' or 'user'
 
   // Custom UI State
   const [notification, setNotification] = useState(null);
@@ -104,12 +100,10 @@ function App() {
   ];
 
   useEffect(() => {
-    if (viewMode === 'admin') {
-      fetchTickets();
-      const interval = setInterval(fetchTickets, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [viewMode]);
+    fetchTickets();
+    const interval = setInterval(fetchTickets, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchTickets = async () => {
     try {
@@ -229,10 +223,6 @@ function App() {
     }
   };
 
-  if (viewMode === 'user') {
-    return <UserPortal onBack={() => setViewMode('admin')} />;
-  }
-
   return (
     <div className="layout">
       <main className="main-content">
@@ -242,13 +232,6 @@ function App() {
             <input type="text" placeholder="Search knowledge base..." />
           </div>
           <div className="header-actions">
-            <button
-              className="refresh-btn"
-              onClick={() => setViewMode('user')}
-              title="Switch to User Portal"
-            >
-              <User size={18} /> User View
-            </button>
             <Bell size={20} />
             <div className="avatar"></div>
           </div>
