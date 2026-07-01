@@ -1,26 +1,26 @@
 # Project LoopBack
-`LoopBack` is an AI-powered IT Support Helpdesk system that acts as a first line of defense for support teams. It intelligently handles user inquiries using a Knowledge Base (KB) and escalates complex issues to human agents when necessary. Crucially, it learns from every resolved ticket to improve its future responses.
+`LoopBack` is an AI-powered IT Support Helpdesk system that acts as a first line of defense for support teams. It intelligently handles user inquiries using a Supabase-backed Knowledge Base (KB) and escalates complex issues to human agents when necessary. Crucially, it learns from every resolved ticket to improve its future responses.
 
 ## Key Features
 
 *   **Intelligent Chat Interface**: Users converse naturally with the AI to troubleshoot issues.
 *   **Automatic Escalation**: If the AI cannot resolve an issue (or if hardware/admin intervention is required), it automatically drafts a ticket with a summary of the problem and the full conversation history.
 *   **Knowledge Base Integration**:
-    *   **Retrieval**: Uses fuzzy search logic to find relevant solutions from a CSV database (`knowledge_base/Workplace_IT_Support_Database.csv`).
-    *   **Robust Search**: Matches against "Issue", "Question", and "Tags", ignoring punctuation and case.
+    *   **Retrieval**: Uses Supabase FAQ entries as the live knowledge base.
+    *   **Robust Search**: Matches against category, issue, question, and tags using keyword overlap.
     *   **Duplicate Prevention**: Automatically blocks duplicate or highly similar questions from being added to the KB to keep it clean.
 *   **Self-Learning**: When an admin marks a ticket as "Resolved" with a quality answer, the system automatically adds that solution to the Knowledge Base for future use.
 *   **Admin Dashboard**: View and manage tickets, see AI-drafted solutions, and monitor KB updates.
+*   **Database Viewer**: The Database button opens a live Supabase FAQ view with a small sample of entries.
 *   **Multi-Channel Support**:
-    *   **Discord Bot**: Users can open tickets directly from Discord. The bot creates dedicated **threads** (private/public) for each issue to keep channels clean.
-    *   **Web Portal**: A responsive React application for tracking and managing tickets.   
+    *   **Discord Bot**: Users can open tickets directly from Discord. The bot creates dedicated **threads** for each issue to keep channels clean.
 
 ## Technology Stack
 
 *   **Backend**: Python (FastAPI)
 *   **Frontend**: React (Vite + Tailwind CSS + Lucide Icons)
 *   **AI Model**: Google Gemini-3-Pro
-*   **Database**: JSON file (`tickets_db.json`) for tickets, CSV file for Knowledge Base.
+*   **Database**: Supabase Postgres for tickets and FAQ knowledge-base entries.
 *   **Integration**: Discord.py (Bot)
 
 ## System Architecture
@@ -34,8 +34,8 @@ graph TD
     
     subgraph Backend Services
         API <--> AI[Google Gemini AI]
-        API <--> KB[(Knowledge Base CSV)]
-        API <--> DB[(Tickets DB JSON)]
+        API <--> KB[(Supabase FAQ Repository)]
+        API <--> DB[(Supabase Tickets Table)]
     end
     
     Admin([Admin]) <--> Frontend
@@ -56,7 +56,7 @@ sequenceDiagram
     U->>Discord: Asks Question
     F->>B: Sends Query
     Discord ->> B: Sends Query
-    B->>K: Search for existing solutions
+    B->>K: Search Supabase FAQ entries
     K-->>B: Returns context
     B->>AI: Analyze query + Context
     AI-->>B: Returns Draft Response & Metadata
@@ -75,7 +75,7 @@ sequenceDiagram
         A->>B: Submits Final Answer
         B->>AI: Standardize Resolution
         AI-->>B: Returns Cleaned Text
-        B->>K: Updates Knowledge Base
+        B->>K: Updates Supabase FAQ Repository
     end
 ```
 
@@ -85,6 +85,7 @@ sequenceDiagram
 *   Python 3.9+
 *   Node.js & npm
 *   Google Gemini API Key
+*   Supabase project with API URL and service role key
 
 ### Backend Setup
 1.  Navigate to the project root:
@@ -98,16 +99,12 @@ sequenceDiagram
 3.  Set up your environment variables:
     *   Create a `.env` file in the root directory.
     *   `GOOGLE_API_KEY=your_api_key_here`
+    *   `USE_SUPABASE=true`
+    *   `SUPABASE_URL=your_supabase_project_url`
+    *   `SUPABASE_SERVICE_ROLE_KEY=your_service_role_key`
     *   `DISCORD_BOT_TOKEN=<bot-token>`
     *   `DISCORD_GUILD_ID=<server-id>` (The server ID where you want the bot to operate)
     *   `DISCORD_CHANNEL_ID=<channel-id>` (The channel ID where you want the bot to operate)
-
-    *   If you wish to use Langsmith services, add 
-    `LANGSMITH_TRACING=true`
-    `LANGSMITH_ENDPOINT=https://api.smith.langchain.com`
-    `LANGSMITH_API_KEY=<your-api-key>`
-    `LANGSMITH_PROJECT=<your-project-name>`
-    
 
     *   If you wish to use Langsmith services, add 
     `LANGSMITH_TRACING=true`
@@ -140,20 +137,26 @@ sequenceDiagram
     ```bash
     python3 discord_bot.py
     ```
+5.  Migrate the old local JSON/CSV data into Supabase:
+    ```bash
+    python scripts/migrate_local_to_supabase.py
+    ```
 
 ## Usage
 
-1.  **User Portal**: Users open the app and type their IT issue. The AI attempts to solve it using the Knowledge Base.
+1.  **User Question**: Users open the app and type their IT issue. The AI attempts to solve it using the Supabase Knowledge Base.
 2.  **Ticket Creation**: If unresolved, a ticket is created.
 3.  **Admin Resolution**: An admin reviews the ticket via the dashboard (or simulates resolution via API) and provides a final answer.
-4.  **Learning**: The system detects the high-quality resolution and adds it to the Knowledge Base for next time.
+4.  **Learning**: The system detects the high-quality resolution and adds it to the Supabase FAQ repository for next time.
 
 ## Project Structure
 
 *   `server.py`: Main backend logic (App, API endpoints, AI integration).
 *   `discord_bot.py`: Discord bot logic.
-*   `tickets_db.json`: Stores all ticket data.
-*   `knowledge_base/`: Contains the CSV database used for RAG (Retrieval-Augmented Generation).
+*   `db/`: Supabase client and repository layer.
+*   `scripts/migrate_local_to_supabase.py`: One-time migration script for local data.
+*   `tickets_db.json`: Legacy snapshot only.
+*   `knowledge_base/`: Legacy CSV snapshot only.
 *   `frontend/`: React source code.
-    *   `src/UserPortal.jsx`: The chat interface for end-users.
-    *   `src/AdminDashboard.jsx`: Interface for support agents.
+    *   `src/App.jsx`: Admin dashboard and ticket queue.
+    *   `src/UserPortal.jsx`: User portal component kept for reference.
